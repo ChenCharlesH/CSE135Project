@@ -16,13 +16,13 @@ ActiveRecord::Schema.define(version: 20170428012034) do
   enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
-    t.string   "unique_name",        default: "",   null: false
-    t.string   "encrypted_password", default: "",   null: false
-    t.string   "role",               default: "",   null: false
-    t.integer  "age",                default: 0,    null: false
-    t.string   "state",              default: "CA", null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.string   "unique_name",        default: "",    null: false
+    t.string   "encrypted_password", default: "",    null: false
+    t.boolean  "owner",              default: false
+    t.integer  "age",                default: 0,     null: false
+    t.string   "state",              default: "CA",  null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.index ["unique_name"], name: "index_users_on_unique_name", unique: true, using: :btree
   end
 

@@ -1,3 +1,124 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+html, body{
+   padding:0px;
+   margin:0px;
+   background:#222;
+   font-family: 'Ubuntu', sans-serif;
+   color:#FFF;
+}
+.shadow{
+   max-width:300px;
+   box-shadow:0px 4px 9px rgba(0, 0, 0, 0.35);
+   border-radius:100%;
+   margin:40px auto;
+   box-sizing:border-box;
+}
+.icon{
+   width:100%;
+   padding-bottom:100%;
+   position:relative;
+   border:5px solid black;
+   border-radius:100%;
+   overflow:hidden;
+   box-sizing:border-box;
+   background:#224;
+   -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+   box-shadow:0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+.img{
+   position:absolute;
+   height:100%;
+   width:100%;
+   overflow:hidden;
+
+   img{
+      position:absolute;
+      width:100%;
+      bottom:0px;
+   }
+   &.water{
+      z-index:11;
+      img{ animation:move 5s linear infinite; animation-delay:-2.5s;}
+      &:nth-of-type(2){ img{animation-delay:0s;} }
+   }
+   &.boat{
+         bottom:10%;
+      z-index:10;
+      img{
+         animation:moveboat 4s linear infinite alternate;
+         border-radius:100%;
+      }
+   }
+}
+.star{
+   width:100%;
+   height:100%;
+   left:-10%;
+   top:0px;
+   position:absolute;
+   z-index:-1;
+   animation:stars 5s linear infinite;
+   @for $i from 1 through 20{
+      &:nth-of-type(#{$i}){
+         animation-delay:random(5) + -2.5s;
+         &:after{
+            $size: random(4);
+            width:$size + 0%;
+            height:$size + 0%;
+            top:random(100) + 0%;
+         }
+      }
+   }
+   &:after{
+      content: '';
+      border-radius:100%;
+      background:rgba(255, 255, 255, 0.8);
+      position:absolute;
+      left:0%;
+   }
+}
+.moon{
+   width:100%;
+   height:100%;
+   z-index:-1;
+   &:before{
+      content:'';
+      left:22%;
+      top:11%;
+      width:40px;
+      height:40px;
+      background:#224;
+      position:absolute;
+      border-radius:100%;
+      z-index:0;
+   }
+   &:after{
+      content:'';
+      left:15%;
+      top:16%;
+      width:40px;
+      height:40px;
+      background:#fff;
+      position:absolute;
+      border-radius:100%;
+      z-index:-1;
+   }
+}
+@keyframes move{
+   0%{left:98%}
+   50%{left:0%}
+   100%{left:-100%}
+}
+@keyframes moveboat{
+   0%{transform:rotateZ(0deg);}
+   50%{transform:rotateZ(10deg);}
+   100%{transform:rotateZ(-10deg);}
+}
+
+@keyframes stars{
+   0%{ transform:translateX(120%); }
+   0.1%{ transform:translateX(120%); }
+   100%{ transform:translateX(-20%); }
+}
