@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  unique_name: MyString
+  sku: MyString
+  category: one
+  price: 1
+
+two:
+  unique_name: MyString
+  sku: MyString
+  category: two
+  price: 1
