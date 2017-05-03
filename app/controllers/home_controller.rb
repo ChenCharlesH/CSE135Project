@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    @output = ":^)"
+    @value = Random.rand(3)
   end
 end
