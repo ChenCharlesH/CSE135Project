@@ -18,11 +18,26 @@
     <div class="moon"></div>
   </div>
 </div>
+<style>
+@keyframes move{
+   0%{left:98%}
+   50%{left:0%}
+   100%{left:-100%}
+}
+@keyframes moveboat{
+   0%{transform:rotateZ(0deg);}
+   50%{transform:rotateZ(10deg);}
+   100%{transform:rotateZ(-10deg);}
+}
+
+@keyframes stars{
+   0%{ transform:translateX(120%); }
+   0.1%{ transform:translateX(120%); }
+   100%{ transform:translateX(-20%); }
+}
+</style>
 
 <% elsif @value == 1 %>
-  <div id="jsi-forest-container" class="container-forest"></div>
-
-<% elsif @value == 2 %>
   <script>
   (function() {
 

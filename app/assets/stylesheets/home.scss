@@ -106,29 +106,3 @@ html, body{
       z-index:-1;
    }
 }
-@keyframes move{
-   0%{left:98%}
-   50%{left:0%}
-   100%{left:-100%}
-}
-@keyframes moveboat{
-   0%{transform:rotateZ(0deg);}
-   50%{transform:rotateZ(10deg);}
-   100%{transform:rotateZ(-10deg);}
-}
-
-@keyframes stars{
-   0%{ transform:translateX(120%); }
-   0.1%{ transform:translateX(120%); }
-   100%{ transform:translateX(-20%); }
-}
-
-.container-forest{
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    top: 50%;
-    left: 50%;
-    margin-top: -250px;
-    margin-left: -250px;
-}
