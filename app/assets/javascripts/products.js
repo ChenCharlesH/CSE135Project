@@ -1,8 +1,9 @@
 $(document).ready(function(){
+  $("#load").hide();
   $("#search_bar").bind("keyup", function() {
 
     // Loading progress
-    $("#search_bar").addClass("loading");
+    $("#load").show();
     // Search form wrapper
     var form = $("#search_form");
 
@@ -11,7 +12,7 @@ $(document).ready(function(){
 
     $.get(url, formData, function(html) { // AJAX
       // Remove loading progress
-      $("#search_bar").removeClass("loading");
+      $("#load").hide();
       $("#search_result").html(html); // Replace the "results" div with the result
     });
   });

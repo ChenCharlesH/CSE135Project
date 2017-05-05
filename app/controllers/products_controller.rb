@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
   def search()
     name = params[:search_form][:search_bar]
     name = name.downcase
-    if name != ""
+    if name.strip != ""
       @product_results = Product.where("LOWER(unique_name) like ?", "%#{name}%")
     else
       @product_results = Product.all
