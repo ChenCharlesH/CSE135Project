@@ -7,18 +7,32 @@
   <div>O</div>
   <div>L</div>
 </div>
+<div class="sidenav">
+  <div style="padding-left: 4%">
+  <a href="javascript:void(0)" class="closebtn">&times;</a>
 <%= form_for :search_form, html: {id: "search_form", method: "get"}, action: :search do |f|%>
   <%# Generate categories %>
 
-  <%= f.label "Search: " %>
-  <%= f.text_field :search_bar, id: :search_bar %>
+  <div>
   <br />
+  <%= f.label "Search: " %> <br />
+  <%= f.text_field :search_bar, id: :search_bar %>
+  </div>
   <%= f.collection_check_boxes :category, Category.all, :id, :unique_name, :include_hidden => false do |m| %>
-  <%= m.check_box class: "check_box"%> <%= m.label %>
+  <%= m.check_box class: "check_box"%> <%= m.label %> <br />
   <% end %>
   <br />
 <% end %>
-<br />
+  </div>
+</div>
+
+<div class="openbtn">
+  <a href = "javascript:void(0)">
+  <span class="glyphicon glyphicon-search" aria-hidden="true">
+  </span>
+</a>
+</div>
+<div class="main">
 <table class = "container">
   <thead>
     <tr>
@@ -31,3 +45,4 @@
     <%= render "products/search" %>
   </tbody>
 </table>
+</div>

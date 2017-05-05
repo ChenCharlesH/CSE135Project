@@ -1,4 +1,21 @@
-var bind = function() {
+/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+function openNav() {
+    $(".sidenav").css("width", "250px");
+    $(".main").css("visibility", "hidden");
+    $(".main").css("marginLeft", "250px");
+    $(".main").css("visibility", "visible");
+    $(".openbtn").hide();
+}
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+function closeNav() {
+    $(".sidenav").css("width", "0");
+    $(".main").css("visibility", "hidden");
+    $(".main").css("marginLeft", "0");
+    $(".main").css("visibility", "visible");
+    $(".openbtn").show(500);
+}
+function bind() {
     // Loading progress
     $("#load").show();
     // Search form wrapper
@@ -11,19 +28,31 @@ var bind = function() {
       // Remove loading progress
       $("#load").hide();
       $("#search_result").html(html); // Replace the "results" div with the result
+      setTimeout(arguments.callee, 1000);
     });
 };
 
-var ready = function(){
-  $("#search_bar").bind("keyup",bind);
-  $(".check_box").change(bind);
+var searchWTimer = function(e){
+  clearTimeout($.data(this, "timer"));
+  if(e.keyCode == 13) {
+  } else {
+    $(this).data('timer',setTimeout(bind,500));
+  }
+}
 
-  $("#load").hide();
+var ready = function(){
+  $("#search_bar").bind("keyup", searchWTimer);
+  $(".check_box").change(searchWTimer);
+
+  // Side bar menu
+  $(".closebtn").click(closeNav);
+  $(".openbtn").click(openNav);
   $("form").on("keypress", function (e) {
       if (e.keyCode == 13) {
           return false;
       }
   });
+  $("#load").hide();
 };
 $(document).ready(ready);
 $(document).on('turbolinks:load',ready);
