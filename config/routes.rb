@@ -9,6 +9,6 @@ Rails.application.routes.draw do
 
   # Require authentication for these pages.
   authenticate :user do
-    resources :categories, only: [:index, :new, :create, :update]
+    resources :categories, only: [:index, :create, :update, :destroy]
   end
 end

@@ -14,6 +14,10 @@
  *= require_self
  */
 
+.alert {
+  color: #f44336;
+}
+
 .devise_links * {
   color: gray;
   text-decoration: none;
@@ -120,7 +124,7 @@ td.container_pop {
 .container {
 	text-align: left;
 	overflow: hidden;
-	width: 80%;
+	width: 90%;
 	margin: 0 auto;
   display: table;
   padding: 0 0 8em 0;
@@ -203,7 +207,6 @@ table {
 }
 
 .blue_input input[type="text"], .blue_input input[type="email"], .blue_input input[type="password"], .blue_input textarea, .blue_input select {
-    resize: none;
     border: none;
     color:white;
     height: 25px;
@@ -221,7 +224,8 @@ table {
     background-color:#1F2739;
     background:#6a7eaf;
 }
-.blue_input .delete_button {
+
+.delete_button {
     background-color: #f44336;
     border: none;
     color: white;
@@ -231,7 +235,7 @@ table {
     display: inline-block;
     font-size: 16px;
 }
-.blue_input .update_button {
+.update_button {
     background-color: #4CAF50;
     border: none;
     color: white;
@@ -241,11 +245,27 @@ table {
     display: inline-block;
     font-size: 16px;
 }
-.blue_input .button:hover{
+.insert_button {
+    background-color:#008CBA;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+.delete_button:hover{
     background-color: #d2190b;
 }
+.insert_button:hover{
+    background-color: #006687;
+}
+.update_button:hover{
+    background-color: #3C8C40;
+}
 .blue_input textarea{
-  width: 100%;
+  width: 25em;
   height: 10em;
 }
 

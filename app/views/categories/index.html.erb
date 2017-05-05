@@ -9,7 +9,7 @@
   </tr>
   </thead>
   <tbody>
-<% current_user.categories.each do |cat| %>
+<% current_user.categories.order('unique_name ASC').each do |cat| %>
   <tr>
     <%= form_for :category, url: "categories/" + String(cat.id), :method => "put" do |f| %>
     <td class= "blue_input container_pop"> <%= f.text_field :unique_name,  value: cat.unique_name%></td>
@@ -27,17 +27,20 @@
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <%= f.submit "Delete", class: "delete_button" %>
       <% end %>
-      <% end %>
+    <% end %>
+    <% end %>
       </li>
       </ul>
-
     </td>
   </tr>
-<% end %>
+  <tr>
+  <%= form_for @insert_category, url: "categories", :method => "post" do |f| %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <td class= "blue_input container_pop"> <%= f.text_field :unique_name %></td>
+    <td class= "blue_input container_pop"><%= f.text_area :desc %></td>
+    <td class= "blue_input"> <%= f.submit "Insert", class: "insert_button" %> </td>
+    <% end %>
+  </tr>
   </tbody>
 </table>
-
-<% if current_user.categories.size == 0 %>
-  You haven't created any categories yet...
-<% end %>
 </div>
