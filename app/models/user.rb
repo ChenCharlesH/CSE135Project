@@ -3,6 +3,16 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :validatable
          # :recoverable, :rememberable, :trackable
+
+  validates :age, :numericality => {:only_integer => true}
+
+  has_many :categories
+  has_many :carts
+  has_many :purchases
+
+  has_many :products, through: :carts
+  has_many :products, through: :purchases
+
   def email_required?
     false
   end

@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        unique_name: "Name"
+      category:
+        unique_name: "Name"

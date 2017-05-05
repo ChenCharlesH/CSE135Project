@@ -1,0 +1,43 @@
+<div class = "container">
+<h1> Categories </h1>
+<table class = "container">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Desc.</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+<% current_user.categories.each do |cat| %>
+  <tr>
+    <%= form_for :category, url: "categories/" + String(cat.id), :method => "put" do |f| %>
+    <td class= "blue_input container_pop"> <%= f.text_field :unique_name,  value: cat.unique_name%></td>
+    <td class= "blue_input container_pop"><%= f.text_area :desc,  value: cat.desc%></td>
+    <td class = "blue_input">
+      <ul>
+      <li>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= f.submit "Update", class: "update_button" %>
+      </li>
+    <% end %>
+      <li>
+      <% if cat.products.size == 0 %>
+      <%= form_for :category, url: "categories/" + String(cat.id), :method => "delete" do |f| %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= f.submit "Delete", class: "delete_button" %>
+      <% end %>
+      <% end %>
+      </li>
+      </ul>
+
+    </td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+
+<% if current_user.categories.size == 0 %>
+  You haven't created any categories yet...
+<% end %>
+</div>

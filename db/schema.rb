@@ -27,16 +27,18 @@ ActiveRecord::Schema.define(version: 20170503232028) do
 
   create_table "categories", force: :cascade do |t|
     t.string   "unique_name",              null: false
+    t.integer  "user_id",                  null: false
     t.string   "desc",        limit: 1023
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.index ["unique_name"], name: "index_categories_on_unique_name", unique: true, using: :btree
+    t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
   end
 
   create_table "products", force: :cascade do |t|
+    t.integer  "category_id",             null: false
     t.string   "unique_name",             null: false
     t.string   "sku",                     null: false
-    t.integer  "category_id",             null: false
     t.integer  "price",       default: 0, null: false
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -48,7 +50,7 @@ ActiveRecord::Schema.define(version: 20170503232028) do
     t.integer  "user_id",                                    null: false
     t.integer  "product_id",                                 null: false
     t.integer  "quantity",                                   null: false
-    t.datetime "time",       default: '2017-05-03 23:22:41', null: false
+    t.datetime "time",       default: '2017-05-04 22:57:04', null: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.index ["product_id"], name: "index_purchases_on_product_id", using: :btree
@@ -68,6 +70,7 @@ ActiveRecord::Schema.define(version: 20170503232028) do
 
   add_foreign_key "carts", "products"
   add_foreign_key "carts", "users"
+  add_foreign_key "categories", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "purchases", "products"
   add_foreign_key "purchases", "users"
