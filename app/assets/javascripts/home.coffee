@@ -1,7 +1,7 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-
+###
 RENDERER =
   TREE_COUNT: 700
   LIGHT_COUNT: 200
@@ -287,3 +287,4 @@ SHADOW =
 $ ->
   RENDERER.init()
   return
+###

@@ -1,0 +1,25 @@
+<%= form_for :search_form, html: {id: "search_form", method: "get"}, action: :search do |f|%>
+  <%# Generate categories %>
+  <br />
+  <% current_user.categories.order('unique_name ASC').each do |cat| %>
+    <%= f.label cat.unique_name %>
+    <%= f.check_box cat.unique_name %> <br />
+  <% end %>
+  <br />
+
+  <%= f.label "Search: " %>
+  <%= f.text_field :search_bar, id: :search_bar %>
+<% end %>
+<br />
+<table class = "container">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>SKU</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody id="search_result">
+    <%= render "products/search" %>
+  </tbody>
+</table>

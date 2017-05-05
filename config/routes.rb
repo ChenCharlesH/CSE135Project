@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   # Require authentication for these pages.
   authenticate :user do
     resources :categories, only: [:index, :create, :update, :destroy]
+    resources :products, only: [:index, :create, :update, :destroy]
+    get "products/search" => "products#search"
   end
 end
