@@ -14,14 +14,16 @@ var bind = function() {
     });
 };
 
-$(document).ready(function(){
-  $("#load").hide();
+var ready = function(){
   $("#search_bar").bind("keyup",bind);
   $(".check_box").change(bind);
 
+  $("#load").hide();
   $("form").on("keypress", function (e) {
       if (e.keyCode == 13) {
           return false;
       }
   });
-});
+};
+$(document).ready(ready);
+$(document).on('turbolinks:load',ready);
