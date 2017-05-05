@@ -137,12 +137,12 @@ td.container_pop, .container th {
 }
 
 /* Background-color of the odd rows */
-tr:nth-child(odd).container_pop {
+.container tr:nth-child(odd), .checker tr:nth-child(odd){
 	  background-color: #323C50;
 }
 
 /* Background-color of the even rows */
-tr:nth-child(even).container_pop{
+.container tr:nth-child(even){
 	  background-color: #2C3446;
 }
 
@@ -150,7 +150,7 @@ tr:nth-child(even).container_pop{
 	  background-color: #1F2739;
 }
 
-td:first-child.container_pop { color: #FB667A; }
+.container td:first-child { color: #FB667A; }
 
 tr:hover.container_pop {
    background-color: #464A52;
@@ -195,7 +195,6 @@ table {
     margin-left: auto;
     margin-right: auto;
     max-width: 500px;
-    background: #1F2739;
     padding: 20px 30px 20px 30px;
     font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #A7A1AE;
@@ -209,6 +208,7 @@ table {
 .blue_input input[type="text"], .blue_input input[type="email"], .blue_input input[type="password"], .blue_input textarea, .blue_input select {
     border: none;
     color:white;
+    resize:none;
     height: 25px;
     line-height:15px;
     margin-bottom: 16px;
@@ -221,7 +221,6 @@ table {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    background-color:#1F2739;
     background:#6a7eaf;
 }
 
