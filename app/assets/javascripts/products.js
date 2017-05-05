@@ -1,7 +1,4 @@
-$(document).ready(function(){
-  $("#load").hide();
-  $("#search_bar").bind("keyup", function() {
-
+var bind = function() {
     // Loading progress
     $("#load").show();
     // Search form wrapper
@@ -15,7 +12,12 @@ $(document).ready(function(){
       $("#load").hide();
       $("#search_result").html(html); // Replace the "results" div with the result
     });
-  });
+};
+
+$(document).ready(function(){
+  $("#load").hide();
+  $("#search_bar").bind("keyup",bind);
+  $(".check_box").change(bind);
 
   $("form").on("keypress", function (e) {
       if (e.keyCode == 13) {
