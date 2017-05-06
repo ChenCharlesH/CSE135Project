@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :validatable
          # :recoverable, :rememberable, :trackable
 
-  validates :age, :numericality => {:only_integer => true}
+  validates :age, :numericality => { less_than_or_equal_to: 150, greater_than_or_equal_to: 0, :only_integer => true}
 
   has_many :categories
   has_many :carts

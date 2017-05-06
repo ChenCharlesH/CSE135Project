@@ -14,7 +14,7 @@
       <li> <%= link_to "Home", controller: "/home", action: "index" %> </li>
       <% if user_signed_in? %>
         <li> <%= link_to "Products", controller: "/products", action: :index %> </li>
-        <li> <%= link_to "Cart"%> </li>
+        <li> <%= link_to "Cart", controller: "/orders", action: :index%> </li>
         <li style="float:right"> <%= link_to "Sign Out", destroy_user_session_path, :method=>:delete%> </li>
           <% if current_user.owner? %>
             <li> <%= link_to "Categories", controller:"/categories", action:"index"%> </li>

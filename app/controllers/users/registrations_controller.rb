@@ -12,6 +12,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     @states = us_states
     super
+
+    rescue
+      flash[:alert] = "Your signup failed: Username already exists."
+      render :new
   end
 
   # GET /resource/edit

@@ -10,11 +10,13 @@ Rails.application.routes.draw do
   # Require authentication for these pages.
   authenticate :user do
     resources :categories, only: [:index, :create, :update, :destroy]
-    resources :products, only: [:index, :create, :update, :destroy]
+    resources :browse, only: [:index, :create]
+    resources :products, only: [:index, :create, :update]
     resources :orders, only: [:index, :create]
     # Overriden get for orders in order to support product adding.
     get "orders/new/:product_id" => "orders#new"
 
     get "products/search" => "products#search"
+    get "browse/search" => "browse#search"
   end
 end

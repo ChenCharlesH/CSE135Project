@@ -1,12 +1,11 @@
-class ProductsController < ApplicationController
-  before_filter :authorize_owner, only: [:destroy, :create, :update]
+class BrowseController < ApplicationController
 
-  # GET products
+  # GET browse
   def index()
     @product_results = Product.all
   end
 
-  # POST products
+  # POST browse
   def create()
 
   end

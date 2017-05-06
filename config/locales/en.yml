@@ -27,3 +27,4 @@ en:
         unique_name: "Name"
       category:
         unique_name: "Name"
+        desc: "Description"
