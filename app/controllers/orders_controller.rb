@@ -16,7 +16,7 @@ class OrdersController < ApplicationController
 
     @insert_cart = Cart.new(params)
     if @insert_cart.save
-      redirect_to "/orders", flash: {notice: "Cart added successfully!"}
+      redirect_to "/browse", flash: {notice: "Cart added successfully!"}
     else
       flash[:alert] = @insert_cart.errors.full_messages.to_sentence
       index()

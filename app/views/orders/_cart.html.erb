@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Price</th>
+      <th>Price ($)</th>
       <th>Quantity</th>
     </tr>
   </thead>
@@ -14,7 +14,7 @@
         <%= @products[i].unique_name %>
       </td>
       <td class="container_pop">
-        $<%= @products[i].price %>
+        <%= @products[i].price %>
       </td>
       <td class="container_pop">
         <%= c.quantity %>
