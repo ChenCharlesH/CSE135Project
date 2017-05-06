@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_filter :authorize_owner, only: [:destroy, :create, :update]
+  before_filter :authorize_owner
 
   # GET products
   def index()
