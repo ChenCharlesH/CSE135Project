@@ -18,5 +18,7 @@ Rails.application.routes.draw do
 
     get "products/search" => "products#search"
     get "browse/search" => "browse#search"
+
+    post "orders/confirm" => "orders#confirm"
   end
 end

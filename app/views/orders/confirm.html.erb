@@ -1,0 +1,31 @@
+<div class = "dark-matter">
+Purchase successful!<%= link_to "Click here", controller: "browse", action: "index" %> to go back to browsing.
+</div>
+<table class = "container">
+  <h1>Purchase Confirmation: </h1>
+  <thead>
+    <tr>
+      <th> Name </th>
+      <th> Price ($)</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @product_numbers.each_with_index do |v, ind| %>
+      <% @prod = Product.find(v) %>
+
+      <tr>
+        <td class="blue_input">
+          <%= @prod.unique_name %>
+        </td>
+        <td class="blue_input">
+          <%= @prod.price %>
+        </td>
+        <td class="blue_input">
+          <%= @quantity_numbers[ind] %>
+        </td>
+      </tr>
+
+    <% end %>
+  </tbody>
+</table>

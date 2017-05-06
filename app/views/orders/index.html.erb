@@ -1,4 +1,21 @@
 <div class="container">
 <h1> Cart </h1>
 <%= render "orders/cart" %>
+<% if !@products.nil? && !@products[0].nil? %>
+<div style="float: right;">
+<%= form_for :products, url: "orders/confirm", :method => "post" do |f|%>
+  <% @carts.each_with_index do |c, i| %>
+    <% next if @products.nil? || @products[i].nil? %>
+    <%= f.hidden_field "[#{String(i)}][product_id]", value: @products[i].id %>
+    <%= f.hidden_field "[#{String(i)}][quantity]", value: c.quantity %>
+  <% end %>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= f.label "CCN: " %> <br />
+  <%= f.text_field "credit_card", value: "*******" %>
+  <br /> <br />
+  <%=  f.submit "Purchase", class: "update_button" %>
+<% end %>
+</div>
+<%end %>
+
 </div>

@@ -8,6 +8,45 @@ class OrdersController < ApplicationController
     @products = Product.where("id IN (?)", @product_id)
   end
 
+  # POST orders/confirm
+  # Function to parse saving to products.
+  def confirm()
+    params = conf_params
+
+    @product_numbers = []
+    @quantity_numbers = []
+    @credit_card = 0
+
+    params.each do |k, v|
+      if k == "credit_card"
+        @credit_card = v
+        next
+      end
+
+      @product_numbers.append(v["product_id"])
+      @quantity_numbers.append(v["quantity"])
+
+      v[:user_id] = current_user.id
+      v = v.permit(:user_id, :quantity, :product_id)
+      @insert_purchase = Purchase.new(v)
+      if @insert_purchase.save
+        next
+      else
+        flash[:alert] = @insert_purchase.errors.full_messages.to_sentence
+        index()
+        render action: :index
+      end
+    end
+
+    # Potentially dangerous without checking user id
+    Cart.where(:user_id => current_user.id).destroy_all
+
+  rescue => e
+    flash[:alert] = "Failed to buy cart."
+    index()
+    render action: :index
+  end
+
   # POST orders/
   # Function to insert new item into cart. Must
   # have proper post values.
@@ -39,6 +78,10 @@ class OrdersController < ApplicationController
   end
 
   # Strong Parameters
+  def conf_params
+    params.require(:products)
+  end
+
   def new_params
     params.require(:product_id)
   end

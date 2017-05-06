@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
       flash[:alert] = @insert_category.errors.full_messages.to_sentence
       render action: :index
     end
-    rescue ActiveRecord::RecordNotUnique
+    rescue
       flash[:alert] = "Category with Name already exists: " + params[:unique_name]
       @categories = current_user.categories.all
       render action: :index
