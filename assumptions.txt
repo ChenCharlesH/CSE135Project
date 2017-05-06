@@ -1,4 +1,21 @@
 ==========================================================
+*********************Technologies Used********************
+==========================================================
+
+
+For this project, we used Ruby on Rails, with our database
+being a PostgresQL database. To run the web application,
+you must have Ruby 2+, Rails 5+, and Postgres 9+ installed
+on your machine.
+
+To start the web application server:
+
+-Navigate to the project directory
+-In a terminal window, run: rails server
+-In a browser window, direct the browser to localhost:3000
+-Enjoy!
+
+==========================================================
 Sign Up
 ==========================================================
 
