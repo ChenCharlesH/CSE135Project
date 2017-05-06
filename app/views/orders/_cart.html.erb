@@ -8,6 +8,7 @@
   </thead>
   <tbody>
     <% @carts.each_with_index do |c, i| %>
+      <% next if @products.nil? || @products[i].nil? %>
     <tr>
       <td class="container_pop">
         <%= @products[i].unique_name %>
