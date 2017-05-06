@@ -1,0 +1,84 @@
+==========================================================
+Sign Up
+==========================================================
+
+
+We added a password field to the sign up, as we are using
+a user authentication library that requires that a
+password be supplied.
+
+
+==========================================================
+Login
+==========================================================
+
+
+No extraordinary assumptions were made for this page.
+
+
+==========================================================
+Home
+==========================================================
+
+
+Since the navigation is along the top bar, and there was
+a lot of empty space below, we put a nice sailboat.
+
+
+==========================================================
+Categories
+==========================================================
+
+
+We went with the assumption that owners can only view and
+modify categories that they have created. Categories are
+sacred; it's like a piece of your soul shining through the
+screen.
+
+
+==========================================================
+Products
+==========================================================
+
+
+We are operating under the assumption that any owner can
+modify any product.
+
+
+==========================================================
+Products Browsing
+==========================================================
+
+
+Protip: The category browser on the left hand side can be 
+summoned by clicking on the magnifying glass.
+
+We decided not to hide the navbar on this page to maintain
+design continuity.
+
+
+==========================================================
+Product Order
+==========================================================
+
+
+No extraordinary assumptions were made for this page.
+
+
+==========================================================
+Cart
+==========================================================
+
+
+No extraordinary assumptions were made for this page.
+
+
+==========================================================
+Confirmation
+==========================================================
+
+
+No extraordinary assumptions were made for this page.
+
+
+==========================================================
