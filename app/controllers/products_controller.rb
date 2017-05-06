@@ -46,12 +46,14 @@ class ProductsController < ApplicationController
 
     prod = Product.find(params[:id])
     if !prod
-      redirect_to "/products", flash: {alert: "Update failure."}
+      redirect_to "/products", flash: {alert: "Delete failure."}
     else
       prod.destroy
       redirect_to "/products", flash: {notice: "Delete successful!"}
     end
 
+  rescue
+      redirect_to "/products", flash: {alert: "Delete failure."}
   end
 
   # AJAX ready call for search.

@@ -8,7 +8,6 @@ class User < ApplicationRecord
 
   has_many :categories
   has_many :carts
-  has_many :purchases
 
   has_many :products, through: :carts
 
