@@ -1,3 +1,4 @@
+<%= javascript_include_tag "browse" %>
 <div id="load">
   <div>G</div>
   <div>N</div>
@@ -17,12 +18,12 @@
     <div>
     <br />
     <%= f.label "Search: " %> <br />
-    <%= f.text_field :search_bar, id: :search_bar %>
+    <%= f.text_field :search_bar, id: :search_bar_b %>
     </div>
-    <input class="check_box" type="radio" value="-1" name="search_form[category]" id="search_form_category_0">
+    <input class="check_box_b" type="radio" value="-1" name="search_form[category]" id="search_form_category_0">
     <label for="search_form_category_0">All Categories</label> <br /> <br />
     <%= f.collection_radio_buttons :category, Category.all, :id, :unique_name, :include_hidden => false do |m| %>
-    <%= m.radio_button class: "check_box"%> <%= m.label %> <br />
+    <%= m.radio_button class: "check_box_b"%> <%= m.label %> <br />
     <% end %>
     <br />
   <% end %>

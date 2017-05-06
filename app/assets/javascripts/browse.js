@@ -21,7 +21,7 @@ function bind() {
     // Search form wrapper
     var form = $("#search_form");
 
-    var url = "/products/search"; // search action
+    var url = "/browse/search"; // search action
     var formData = form.serialize();
 
     $.get(url, formData, function(html) { // AJAX
@@ -44,8 +44,8 @@ var searchWTimer = function(e){
 }
 
 var ready = function(){
-  $("#search_bar").bind("keyup", searchWTimer);
-  $(".check_box").change(searchWTimer);
+  $("#search_bar_b").bind("keyup", searchWTimer);
+  $(".check_box_b").change(searchWTimer);
 
   // row clicking.
   $(".clickables").click(function(){
