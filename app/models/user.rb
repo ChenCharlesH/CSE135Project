@@ -11,7 +11,6 @@ class User < ApplicationRecord
   has_many :purchases
 
   has_many :products, through: :carts
-  has_many :products, through: :purchases
 
   def email_required?
     false

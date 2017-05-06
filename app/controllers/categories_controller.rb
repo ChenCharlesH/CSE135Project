@@ -4,6 +4,7 @@ class CategoriesController < ApplicationController
   # GET categories
   def index()
     @insert_category = Category.new
+    @categories = current_user.categories.all
   end
 
 

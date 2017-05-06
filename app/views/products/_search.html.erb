@@ -1,6 +1,8 @@
 <% @product_results.each do |prod| %>
   <tr>
-    <td class = "container_pop"> <%= prod.unique_name %> </td>
+    <td class = "container_pop">
+      <%= prod.unique_name %> 
+    </td>
     <td class = "container_pop"> <%= prod.sku %> </td>
     <td class = "container_pop"> $<%= prod.price %> </td>
   </tr>

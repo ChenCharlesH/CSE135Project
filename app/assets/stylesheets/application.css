@@ -206,6 +206,10 @@ table {
     -moz-border-radius: 5px;
 }
 
+td.blue_input{
+	 font-size: 1em;
+}
+
 .blue_input input[type="text"], .blue_input input[type="email"], .blue_input input[type="password"], .blue_input textarea, .blue_input select {
     border: none;
     color:white;

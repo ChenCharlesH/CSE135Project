@@ -9,12 +9,12 @@
   </tr>
   </thead>
   <tbody>
-<% current_user.categories.order('unique_name ASC').each do |cat| %>
+<% @categories.order('unique_name ASC').each do |cat| %>
   <div class="checker">
   <tr>
     <%= form_for :category, url: "categories/" + String(cat.id), :method => "put" do |f| %>
-    <td class= "blue_input container_pop"> <%= f.text_field :unique_name,  value: cat.unique_name%></td>
-    <td class= "blue_input container_pop"><%= f.text_area :desc,  value: cat.desc%></td>
+    <td class= "blue_input"> <%= f.text_field :unique_name,  value: cat.unique_name%></td>
+    <td class= "blue_input"><%= f.text_area :desc,  value: cat.desc%></td>
     <td class = "blue_input">
       <ul>
       <li>
@@ -23,7 +23,8 @@
       </li>
     <% end %>
       <li>
-      <% if cat.products.size == 0 %>
+      <%# Note, calls a lot of SQL queries for each cat. %>
+      <% if cat.products.first.nil? %>
       <%= form_for :category, url: "categories/" + String(cat.id), :method => "delete" do |f| %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <%= f.submit "Delete", class: "delete_button" %>

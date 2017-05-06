@@ -1,0 +1,41 @@
+<div class = "container">
+  <h3> Add to Cart? </h3>
+  <table class = "container">
+    <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>SKU</th>
+          <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class = "blue_input">
+          <%= @insert_product.unique_name %>
+        </td>
+        <td class = "blue_input">
+          <%= @insert_product.price %>
+        </td>
+        <td class = "blue_input">
+          <%= @insert_product.sku %>
+        </td>
+        <%= form_for :cart, url: "/orders", method: "post" do |f| %>
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <td class = "blue_input">
+          <%= f.text_field :quantity, value: "1" %>
+          <%= f.hidden_field :user_id, value: current_user.id %>
+          <%= f.hidden_field :product_id, value: @insert_product_id %>
+        </td>
+      </tr>
+      </tr>
+      </tr>
+    </tbody>
+  </table>
+    <%= f.submit "Add", class: "insert_button", style: "float:right" %>
+    <% end %>
+</div>
+<div class="container">
+  <h1> Cart </h2>
+<%= render "orders/cart" %>
+</div>
