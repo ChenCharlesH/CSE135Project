@@ -12,7 +12,7 @@
     </td>
     <td class = "clickable container_pop">
       <%= link_to "orders/new/" + String(prod.id), class: "blue_input" do %>
-        $<%= prod.price %>
+        <%= prod.price %>
       <% end %>
     </td>
   </tr>

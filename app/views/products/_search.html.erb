@@ -1,18 +1,26 @@
 <% @product_results.each do |prod| %>
   <tr class = "fill">
-    <td class = "clickable container_pop">
-      <%= link_to "orders/new/" + String(prod.id), class: "blue_input", style: "color: #FB667A;" do %>
-        <%= prod.unique_name %>
-      <% end %>
+    <%= form_for :products, url: "products/" + String(prod.id), :method=>"put" do |f|%>
+    <td class = "blue_input">
+      <%= f.text_field :unique_name, value: prod.unique_name %>
     </td>
-    <td class = "clickable container_pop">
-      <%= link_to "orders/new/" + String(prod.id), class: "blue_input" do %>
-        <%= prod.sku %>
-      <% end %>
+    <td class = "blue_input">
+      <%= f.text_field :sku, value: prod.sku %>
     </td>
-    <td class = "clickable container_pop">
-      <%= link_to "orders/new/" + String(prod.id), class: "blue_input" do %>
-        $<%= prod.price %>
+    <td class = "blue_input">
+      <%= f.text_field :price, value: prod.price %>
+    </td>
+    <td class = "blue_input">
+      <%= f.collection_select :category_id, Category.all, :id, :unique_name, {selected: prod.category_id} %>
+    </td>
+    <td class = "blue_input">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= f.submit "Update", class: "update_button" %>
+      <% end %>
+
+      <%= form_for :products, url: "products/" + String(prod.id), :method => "delete" do |f| %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= f.submit "Delete", class: "delete_button" %>
       <% end %>
     </td>
   </tr>

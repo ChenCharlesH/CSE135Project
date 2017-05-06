@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   authenticate :user do
     resources :categories, only: [:index, :create, :update, :destroy]
     resources :browse, only: [:index, :create]
-    resources :products, only: [:index, :create, :update]
+    resources :products, only: [:index, :create, :update, :destroy]
     resources :orders, only: [:index, :create]
     # Overriden get for orders in order to support product adding.
     get "orders/new/:product_id" => "orders#new"

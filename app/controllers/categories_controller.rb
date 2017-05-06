@@ -20,6 +20,7 @@ class CategoriesController < ApplicationController
     end
     rescue ActiveRecord::RecordNotUnique
       flash[:alert] = "Category with Name already exists: " + params[:unique_name]
+      @categories = current_user.categories.all
       render action: :index
 
   end
@@ -35,6 +36,10 @@ class CategoriesController < ApplicationController
       msg = "Data modification failure: " + value.errors.full_messages.to_sentence
       redirect_to "/categories", flash: {alert: msg}
     end
+    rescue
+      flash[:alert] = "Failure to update category."
+      index()
+      render action: :index
   end
 
   def destroy()
