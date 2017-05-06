@@ -29,7 +29,7 @@ function bind() {
       $("#load").hide();
       $("#search_result").html(html); // Replace the "results" div with the result
       setTimeout(arguments.callee, 1000);
-      $("td").click(function(){
+      $(".clickable").click(function(){
         window.location.href = $(this).find("a").attr('href');
       });
     });
@@ -48,7 +48,7 @@ var ready = function(){
   $(".check_box").change(searchWTimer);
 
   // row clicking.
-  $("td").click(function(){
+  $(".clickables").click(function(){
     window.location.href = $(this).find("a").attr('href');
   });
 

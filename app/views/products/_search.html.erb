@@ -1,16 +1,16 @@
 <% @product_results.each do |prod| %>
   <tr class = "fill">
-    <td class = "container_pop">
+    <td class = "clickable container_pop">
       <%= link_to "orders/new/" + String(prod.id), class: "blue_input", style: "color: #FB667A;" do %>
         <%= prod.unique_name %>
       <% end %>
     </td>
-    <td class = "container_pop">
+    <td class = "clickable container_pop">
       <%= link_to "orders/new/" + String(prod.id), class: "blue_input" do %>
         <%= prod.sku %>
       <% end %>
     </td>
-    <td class = "container_pop">
+    <td class = "clickable container_pop">
       <%= link_to "orders/new/" + String(prod.id), class: "blue_input" do %>
         $<%= prod.price %>
       <% end %>

@@ -20,7 +20,7 @@
     <%= f.text_field :search_bar, id: :search_bar %>
     </div>
     <input class="check_box" type="radio" value="-1" name="search_form[category]" id="search_form_category_0">
-    <label for="search_form_category_0">None</label> <br />
+    <label for="search_form_category_0">All Categories</label> <br /> <br />
     <%= f.collection_radio_buttons :category, Category.all, :id, :unique_name, :include_hidden => false do |m| %>
     <%= m.radio_button class: "check_box"%> <%= m.label %> <br />
     <% end %>
