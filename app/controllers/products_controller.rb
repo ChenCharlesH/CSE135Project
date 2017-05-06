@@ -19,9 +19,9 @@ class ProductsController < ApplicationController
     name = name.downcase
     cat = params[:search_form][:category]
 
-    if (name.strip != "" || !cat.nil?) && (cat.to_i != -1)
+    if (name.strip != "" || !cat.nil?)
       @product_results = Product.where("LOWER(unique_name) LIKE ?", "%#{name}%")
-      if !cat.nil?
+      if !cat.nil? && cat.to_i >= 0
           @product_results = @product_results.where(:category_id => cat)
       end
     else
