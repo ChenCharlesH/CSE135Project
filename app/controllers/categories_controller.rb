@@ -12,17 +12,18 @@ class CategoriesController < ApplicationController
     params = create_param
     params[:user_id] = current_user.id
     @insert_category = Category.new(params)
+    # Transaction already used within save function
     if @insert_category.save
       redirect_to "/categories", flash: {notice: "Insert successful!"}
     else
       flash[:alert] = @insert_category.errors.full_messages.to_sentence
       render action: :index
     end
+
     rescue
       flash[:alert] = "Category with Name already exists: " + params[:unique_name]
       @categories = current_user.categories.all
       render action: :index
-
   end
 
   # PUT categories

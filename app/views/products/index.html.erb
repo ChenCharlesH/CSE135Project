@@ -48,19 +48,21 @@
       <th>Action</th>
     </tr>
   </thead>
-  <tbody id="search_result">
+  <tbody>
     <tr>
       <%= form_for @insert_product, url: "products", :method=> "post" do |f| %>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <td class = "blue_input container_pop"> <%= f.text_field :unique_name %> </td>
+      <td class = "blue_input container_pop" style="padding-left: 1%;"> <%= f.text_field :unique_name %> </td>
       <td class = "blue_input container_pop"> <%= f.text_field :sku %> </td>
       <td class = "blue_input container_pop"> <%= f.text_field :price %> </td>
       <td class = "blue_input container_pop">
         <%= f.collection_select :category_id, Category.all, :id, :unique_name, {selected: 1} %>
       </td>
-      <td class= "blue_input"> <%= f.submit "Insert", class: "insert_button" %> </td>
+      <td class= "blue_input container_pop"> <%= f.submit "Insert", class: "insert_button" %> </td>
       <% end %>
     </tr>
+  </tbody>
+  <tbody id="search_result">
     <%= render "products/search" %>
   </tbody>
 </table>

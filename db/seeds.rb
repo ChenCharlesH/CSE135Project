@@ -38,7 +38,7 @@ numCat.times do |i|
   Category.create(unique_name: name, user_id: offset, desc: desc, created_at: create, updated_at: update)
 end
 
-numProd = 10
+numProd = 100
 
 numProd.times do |i|
   num = rand(10)

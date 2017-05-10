@@ -1,19 +1,19 @@
 <% @product_results.each do |prod| %>
   <tr class = "fill">
     <%= form_for :products, url: "products/" + String(prod.id), :method=>"put" do |f|%>
-    <td class = "blue_input">
+    <td class = "blue_input container_pop">
       <%= f.text_field :unique_name, value: prod.unique_name %>
     </td>
-    <td class = "blue_input">
+    <td class = "blue_input container_pop">
       <%= f.text_field :sku, value: prod.sku %>
     </td>
-    <td class = "blue_input">
+    <td class = "blue_input container_pop">
       <%= f.text_field :price, value: prod.price %>
     </td>
-    <td class = "blue_input">
+    <td class = "blue_input container_pop">
       <%= f.collection_select :category_id, Category.all, :id, :unique_name, {selected: prod.category_id} %>
     </td>
-    <td class = "blue_input">
+    <td class = "blue_input container_pop">
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
       <%= f.submit "Update", class: "update_button" %>
       <% end %>
