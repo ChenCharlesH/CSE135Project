@@ -53,6 +53,6 @@ numProd.times do |i|
   create = Faker::Date.between(10.days.ago, Date.today)
   update = Faker::Date.between(create, Date.today)
   sku = Faker::Number.unique.number(9)
-  price = Faker::Number.decimal(2)
+  price = Faker::Number.decimal(2) + 1
   Product.create(category_id: cat_id, unique_name: name, sku: sku, price: price, created_at: create, updated_at: update)
 end

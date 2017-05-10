@@ -47,14 +47,12 @@ ActiveRecord::Schema.define(version: 20170503232028) do
   end
 
   create_table "purchases", force: :cascade do |t|
-    t.integer  "user_id",                                    null: false
-    t.integer  "product_id",                                 null: false
+    t.integer  "user",                                       null: false
+    t.integer  "product",                                    null: false
     t.integer  "quantity",                                   null: false
-    t.datetime "time",       default: '2017-05-04 22:57:04', null: false
+    t.datetime "time",       default: '2017-05-10 20:47:13', null: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.index ["product_id"], name: "index_purchases_on_product_id", using: :btree
-    t.index ["user_id"], name: "index_purchases_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -72,6 +70,4 @@ ActiveRecord::Schema.define(version: 20170503232028) do
   add_foreign_key "carts", "users"
   add_foreign_key "categories", "users"
   add_foreign_key "products", "categories"
-  add_foreign_key "purchases", "products"
-  add_foreign_key "purchases", "users"
 end

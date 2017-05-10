@@ -23,11 +23,12 @@ class OrdersController < ApplicationController
         next
       end
 
-      @product_numbers.append(v["product_id"])
+      @product_numbers.append(v["product"])
       @quantity_numbers.append(v["quantity"])
 
-      v[:user_id] = current_user.id
-      v = v.permit(:user_id, :quantity, :product_id)
+      v[:user] = current_user.id
+      v = v.permit(:user, :quantity, :product)
+
       @insert_purchase = Purchase.new(v)
       if @insert_purchase.save
         next
@@ -42,9 +43,9 @@ class OrdersController < ApplicationController
     Cart.where(:user_id => current_user.id).destroy_all
 
   rescue => e
-    flash[:alert] = "Failed to buy cart."
-    index()
-    render action: :index
+    render text: e.message
+    return
+    redirect_to "/orders", flash: {notice: "Failed to buy cart."}
   end
 
   # POST orders/
@@ -53,7 +54,16 @@ class OrdersController < ApplicationController
   def create()
     params = create_params
 
-    @insert_cart = Cart.new(params)
+
+    # check if purchase already exists.
+    # Guranteed to only have one in db.
+    @insert_cart = Cart.where(:user_id => current_user.id, :product_id => params["product_id"]).first
+    if !@insert_cart.nil?
+      @insert_cart.quantity = Integer(@insert_cart.quantity) + Integer(params["quantity"])
+    else
+      @insert_cart = Cart.new(params)
+    end
+
     if @insert_cart.save
       redirect_to "/browse", flash: {notice: "Cart added successfully!"}
     else
@@ -61,7 +71,9 @@ class OrdersController < ApplicationController
       index()
       render action: :index
     end
-    rescue
+  rescue => e
+      render text: e.message
+      return
       flash[:alert] = "Cart adding error."
       index()
       render action: :index
