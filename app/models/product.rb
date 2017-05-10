@@ -6,6 +6,6 @@ class Product < ApplicationRecord
 
   validates :unique_name, presence: true, allow_blank: false
   validates :sku, presence: true, allow_blank: false
-  validates :price, :numericality => { :only_integer => true}
+  validates :price, numericality: true, presence: true, allow_blank: false
 
 end

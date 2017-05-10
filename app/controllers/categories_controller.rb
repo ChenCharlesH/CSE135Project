@@ -16,12 +16,11 @@ class CategoriesController < ApplicationController
     if @insert_category.save
       redirect_to "/categories", flash: {notice: "Insert successful!"}
     else
-      flash[:alert] = @insert_category.errors.full_messages.to_sentence
-      render action: :index
+      redirect_to "/categories", flash: {alert: @insert_category.errors.full_messages.to_sentence}
     end
 
-    rescue
-      flash[:alert] = "Category with Name already exists: " + params[:unique_name]
+   rescue => e
+      flash[:alert] = "Failure to update category."
       @categories = current_user.categories.all
       render action: :index
   end

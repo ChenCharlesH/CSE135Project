@@ -17,7 +17,7 @@
         <li style="float:right"> <%= link_to "Sign Out", destroy_user_session_path, :method=>:delete%> </li>
         <li style="float:right"> <a href="#">Hello <%= current_user.unique_name %>!</a> </li>
           <% if current_user.owner? %>
-            <li> <%= link_to "Products", :data=> {:no_turbolinks => 'true'}, controller: "/products", action: :index%> </li>
+            <li> <%= link_to "Products",  controller: "/products", action: :index%> </li>
             <li> <%= link_to "Categories", controller:"/categories", action:"index"%> </li>
           <% end %>
         <li> <%= link_to "Cart", controller: "/orders", action: :index%> </li>
