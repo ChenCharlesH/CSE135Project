@@ -23,30 +23,32 @@ class OrdersController < ApplicationController
     @quantity_numbers = []
     @credit_card = 0
 
-    params.each do |k, v|
-      if k == "credit_card"
-        @credit_card = v
-        next
+    Purchase.transaction do
+      params.each do |k, v|
+        if k == "credit_card"
+          @credit_card = v
+          next
+        end
+
+        @product_numbers.append(v["product"])
+        @quantity_numbers.append(v["quantity"])
+
+        v[:user] = current_user.id
+        v = v.permit(:user, :quantity, :product)
+
+        @insert_purchase = Purchase.new(v)
+        if @insert_purchase.save
+          next
+        else
+          flash[:alert] = @insert_purchase.errors.full_messages.to_sentence
+          index()
+          render action: :index
+        end
       end
 
-      @product_numbers.append(v["product"])
-      @quantity_numbers.append(v["quantity"])
-
-      v[:user] = current_user.id
-      v = v.permit(:user, :quantity, :product)
-
-      @insert_purchase = Purchase.new(v)
-      if @insert_purchase.save
-        next
-      else
-        flash[:alert] = @insert_purchase.errors.full_messages.to_sentence
-        index()
-        render action: :index
-      end
+      # Potentially dangerous without checking user id
+      Cart.where(:user_id => current_user.id).destroy_all
     end
-
-    # Potentially dangerous without checking user id
-    Cart.where(:user_id => current_user.id).destroy_all
 
   rescue => e
     render text: e.message
