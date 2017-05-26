@@ -13,7 +13,7 @@ FROM
 		Users u
 		LEFT JOIN
 		(
-			SELECT purchin.user, purchin.product, COUNT(*) AS quantity
+			SELECT purchin.user, purchin.product, SUM(purchin.quantity)
 			FROM Purchases purchin
 			GROUP BY purchin.user, purchin.product
 		) as coal
@@ -22,5 +22,27 @@ FROM
 	AS user_purch
 FULL OUTER JOIN Products prod
 ON user_purch.product = prod.id;
+
+# Version Two:
+SELECT up.user_unique_name, up.product_unique_name, up.price, coal.quantity
+FROM
+(
+	SELECT u.unique_name as user_unique_name, p.unique_name as product_unique_name,
+				 u.id AS user_id, p.id AS product_id, p.price as price
+	FROM
+		Users u, Products p
+) AS up
+FULL OUTER JOIN
+(
+	SELECT purchin.user, purchin.product, SUM(purchin.quantity) AS quantity
+	FROM Purchases purchin
+	GROUP BY purchin.user, purchin.product
+) AS coal
+ON
+up.user_id = coal.user AND
+up.product_id = coal.product
+ORDER BY up.user_id;
+
+
 
 # You can then multiply price by quantity to get each matrix element.
