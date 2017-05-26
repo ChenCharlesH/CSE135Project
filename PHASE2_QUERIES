@@ -1,0 +1,26 @@
+# Coalesces similar purchases made by same users and has same product id.
+coal = SELECT p.user_id, p.product_id, COUNT(*) FROM Purchases p GROUP BY p.user_id, p.product_id;
+
+# Joins table with user_id with users table.
+up = SELECT u.unique_name FROM Users u LEFT JOIN Purchases p ON u.id = p.user;
+
+# Full thing:
+SELECT user_purch.unique_name, prod.unique_name, prod.price, user_purch.quantity
+FROM
+	(
+		SELECT u.unique_name, u.id, coal.product, coal.quantity
+		FROM
+		Users u
+		LEFT JOIN
+		(
+			SELECT purchin.user, purchin.product, COUNT(*) AS quantity
+			FROM Purchases purchin
+			GROUP BY purchin.user, purchin.product
+		) as coal
+		ON coal.user = u.id
+	)
+	AS user_purch
+FULL OUTER JOIN Products prod
+ON user_purch.product = prod.id;
+
+# You can then multiply price by quantity to get each matrix element.
