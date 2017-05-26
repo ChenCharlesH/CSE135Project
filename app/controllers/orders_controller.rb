@@ -1,3 +1,9 @@
+# @Author: Hsien-Che Charles Chen
+# @Date:   05-05-2017
+# @Project: PA3
+# @Last modified by:   Hsien-Che Charles Chen
+# @Last modified time: 05-26-2017
+
 class OrdersController < ApplicationController
   # GET orders/
   # Basic function to display cart
@@ -72,8 +78,6 @@ class OrdersController < ApplicationController
       render action: :index
     end
   rescue => e
-      render text: e.message
-      return
       flash[:alert] = "Cart adding error."
       index()
       render action: :index
@@ -87,6 +91,10 @@ class OrdersController < ApplicationController
     @insert_product = Product.find(@insert_product_id)
     # Get data for cart info.
     index()
+  rescue => e
+    flash[:alert] = "Cart adding error."
+    index()
+    render action: :index
   end
 
   # Strong Parameters
