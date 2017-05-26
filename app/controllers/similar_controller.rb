@@ -1,0 +1,2 @@
+class SimilarController < ApplicationController
+end
