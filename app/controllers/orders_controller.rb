@@ -1,3 +1,9 @@
+# @Author: Hsien-Che Charles Chen
+# @Date:   05-05-2017
+# @Project: PA3
+# @Last modified by:   Hsien-Che Charles Chen
+# @Last modified time: 05-26-2017
+
 class OrdersController < ApplicationController
   # GET orders/
   # Basic function to display cart
@@ -17,30 +23,32 @@ class OrdersController < ApplicationController
     @quantity_numbers = []
     @credit_card = 0
 
-    params.each do |k, v|
-      if k == "credit_card"
-        @credit_card = v
-        next
+    Purchase.transaction do
+      params.each do |k, v|
+        if k == "credit_card"
+          @credit_card = v
+          next
+        end
+
+        @product_numbers.append(v["product"])
+        @quantity_numbers.append(v["quantity"])
+
+        v[:user] = current_user.id
+        v = v.permit(:user, :quantity, :product)
+
+        @insert_purchase = Purchase.new(v)
+        if @insert_purchase.save
+          next
+        else
+          flash[:alert] = @insert_purchase.errors.full_messages.to_sentence
+          index()
+          render action: :index
+        end
       end
 
-      @product_numbers.append(v["product"])
-      @quantity_numbers.append(v["quantity"])
-
-      v[:user] = current_user.id
-      v = v.permit(:user, :quantity, :product)
-
-      @insert_purchase = Purchase.new(v)
-      if @insert_purchase.save
-        next
-      else
-        flash[:alert] = @insert_purchase.errors.full_messages.to_sentence
-        index()
-        render action: :index
-      end
+      # Potentially dangerous without checking user id
+      Cart.where(:user_id => current_user.id).destroy_all
     end
-
-    # Potentially dangerous without checking user id
-    Cart.where(:user_id => current_user.id).destroy_all
 
   rescue => e
     render text: e.message
@@ -72,8 +80,6 @@ class OrdersController < ApplicationController
       render action: :index
     end
   rescue => e
-      render text: e.message
-      return
       flash[:alert] = "Cart adding error."
       index()
       render action: :index
@@ -87,6 +93,10 @@ class OrdersController < ApplicationController
     @insert_product = Product.find(@insert_product_id)
     # Get data for cart info.
     index()
+  rescue => e
+    flash[:alert] = "Cart adding error."
+    index()
+    render action: :index
   end
 
   # Strong Parameters
