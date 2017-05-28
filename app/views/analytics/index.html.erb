@@ -1,14 +1,24 @@
-<div class = 'main container'>
+<div class = "main container">
   <h1> Sales Analytics </h1>
-  <table class = 'container'>
+  <!-- Prev/Next button -->
+  <table class = "container">
     <thead>
       <tr>
+        <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
+        <th> <!-- Filter name here --> </th>
         <!-- @col_names is a pre-sorted list of columns -->
         <% @col_names.each do |col| %>
-          <th> col.unique_name </th>
+          <th><% col.unique_name %></th>
+        <% end %>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="analytics_table">
+      <!-- Render the first K rows in one of two modes:
+           - Alphabetical
+           - Top-K, where default K = 20
+      -->
+      <%= render "analytics/current_k" %>
     </tbody>
   </table>
+  <!-- Prev/Next button -->
 </div>
