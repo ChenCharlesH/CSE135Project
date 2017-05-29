@@ -4,7 +4,7 @@
   <!-- Owners can sort by state or customer name and have the results represented
        in either alphabetical order or by the top sales
   -->
-  <% form_for @filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <%= f.label "Sort by: " %>
     <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
@@ -16,10 +16,10 @@
     <thead>
       <tr>
         <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
-        <th> <!-- Filter name here --> </th>
+        <th> rawr<!-- Filter name here --> </th>
         <!-- @col_names is a pre-sorted list of columns -->
         <% @col_names.each do |col| %>
-          <th><% col.unique_name %></th>
+          <th><%= col.unique_name %></th>
         <% end %>
       </tr>
     </thead>
@@ -28,7 +28,7 @@
            - Alphabetical
            - Top-K, where default K = 20
       -->
-      <%= render "analytics/current_k" %>
+      <%# render "analytics/current_k" %>
     </tbody>
   </table>
   <!-- Next button if more exist -->
