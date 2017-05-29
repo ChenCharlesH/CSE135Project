@@ -12,11 +12,11 @@
 <%= @alpha_or_top %>
 <%= @row_page %>
 <%= @col_page %>
+<%= @col_names.to_a %>
 <%= @query_results.to_a %>
 <h1> Sales Analytics </h1>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <%= hidden_field_tag :row_page, @row_page + 1 %>
   <%= hidden_field_tag :state_or_cust, @state_or_cust %>
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
@@ -25,7 +25,6 @@
 
 <!-- Hidden form for keeping track of the page's displayed columns -->
 <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <%= hidden_field_tag :col_page, @col_page + 1 %>
   <%= hidden_field_tag :state_or_cust, @state_or_cust %>
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
@@ -34,7 +33,6 @@
 
 <!-- Form for the user to select filter options -->
 <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <%= hidden_field_tag :row_page, @row_page %>
   <%= hidden_field_tag :col_page, @col_page %>
   <%= f.label "Sort by: " %>
@@ -47,17 +45,14 @@
   <thead>
     <tr>
       <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
-      <th> rawr<!-- Filter name here --> </th>
-      <!-- @col_names is a pre-sorted list of columns -->
+      <th> <%= @state_or_cust %> </th>
+      <!-- @col_names is a list of columns -->
       <% @col_names.each do |col| %>
-        <th><%= col.unique_name %></th>
+        <th><%= truncate(col.unique_name, length: 13) %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
-    <!-- Render the first K rows in one of two modes:
-         - Alphabetical
-         - Top-K, where default K = 20
-    -->
+
   </tbody>
 </table>
