@@ -13,9 +13,29 @@
 <%= @row_page %>
 <%= @col_page %>
 <h1> Sales Analytics </h1>
+<!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <%= hidden_field_tag :page, 0 %>
+  <%= hidden_field_tag :row_page, @row_page + 1 %>
+  <%= hidden_field_tag :state_or_cust, @state_or_cust %>
+  <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
+  <%= f.submit "Next 20 Records" %>
+<% end %>
+
+<!-- Hidden form for keeping track of the page's displayed columns -->
+<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= hidden_field_tag :col_page, @col_page + 1 %>
+  <%= hidden_field_tag :state_or_cust, @state_or_cust %>
+  <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
+  <%= f.submit "Next 10 Columns" %>
+<% end %>
+
+<!-- Form for the user to select filter options -->
+<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= hidden_field_tag :row_page, @row_page %>
+  <%= hidden_field_tag :col_page, @col_page %>
   <%= f.label "Sort by: " %>
   <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
   <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']] %>
