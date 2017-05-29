@@ -30,7 +30,17 @@ FROM
 	SELECT u.unique_name as user_unique_name, p.unique_name as product_unique_name,
 				 u.id AS user_id, p.id AS product_id, p.price as price
 	FROM
-		Users u, Products p
+		(
+      SELECT ui.unique_name, ui.id
+      FROM Users ui
+      WHERE ui.id IN (val)
+    ) AS u,
+    (
+      SELECT pi.unique_name, pi.id, pi.price
+      FROM Products pi
+      WHERE pi.id IN (val)
+    )AS p
+  LIMIT 10
 ) AS up
 FULL OUTER JOIN
 (
