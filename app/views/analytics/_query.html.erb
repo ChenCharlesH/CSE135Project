@@ -34,18 +34,29 @@
 <% end %>
 
 <!-- Hidden form for keeping track of the page's displayed columns -->
+<<<<<<< HEAD
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :col_page, @col_page.to_i + 1 %>
   <%= hidden_field_tag :row_page, @row_page.to_i %>
+=======
+<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= hidden_field_tag :col_page, @col_page + 1 %>
+>>>>>>> a2dc9556a37b85645f3a4f45a4f7073aeeb1db91
   <%= hidden_field_tag :state_or_cust, @state_or_cust %>
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 10 Columns" %>
 <% end %>
 
 <!-- Form for the user to select filter options -->
+<<<<<<< HEAD
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :row_page, @row_page.to_i %>
   <%= hidden_field_tag :col_page, @col_page.to_i %>
+=======
+<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= hidden_field_tag :row_page, @row_page %>
+  <%= hidden_field_tag :col_page, @col_page %>
+>>>>>>> a2dc9556a37b85645f3a4f45a4f7073aeeb1db91
   <%= f.label "Sort by: " %>
   <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
   <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']] %>
@@ -56,17 +67,14 @@
   <thead>
     <tr>
       <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
-      <th> rawr<!-- Filter name here --> </th>
-      <!-- @col_names is a pre-sorted list of columns -->
+      <th> <%= @state_or_cust %> </th>
+      <!-- @col_names is a list of columns -->
       <% @col_names.each do |col| %>
-        <th><%= col.unique_name %></th>
+        <th><%= truncate(col.unique_name, length: 13) %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
-    <!-- Render the first K rows in one of two modes:
-         - Alphabetical
-         - Top-K, where default K = 20
-    -->
+
   </tbody>
 </table>
