@@ -5,15 +5,26 @@ class AnalyticsController < ApplicationController
     @col_names = Product.limit(10).offset(0)
     # Default customers
     @row_names = User.limit(10).offset(0)
-    @query_results =
+    # Set default values
+    @state_or_cust = "customer"
+    @alpha_or_top = "alpha"
+    @col_page = 0
+    @row_page = 0
+    @query_results = helper_query 0
   end
 
   # AJAX for query.
   def query()
     params = params[:filter_options]
-    @soc = params[:filter_options][:state_or_cust]
-    @aot = params[:filter_options][:alpha_or_top]
-    @page = params[:filter_options][:page]
+    @state_or_cust = params[:filter_options][:state_or_cust]
+    @alpha_or_top = params[:filter_options][:alpha_or_top]
+
+    @row_page = params[:filter_options][:row_page]
+    @col_page = params[:filter_options][:col_page]
+
+    @col_names = Product.limit(10).offset(0)
+    @row_names = User.limit(10).offset(0)
+
     @query_results = helper_query 0
   end
 
@@ -60,4 +71,5 @@ class AnalyticsController < ApplicationController
     con.execute(str)
   end
 
+  # Strong parameters
 end
