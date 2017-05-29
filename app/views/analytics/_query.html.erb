@@ -11,3 +11,31 @@
 <% @state_or_cust %>
 <% @alpha_or_top %>
 <% @page %>
+<h1> Sales Analytics </h1>
+<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= hidden_field_tag :page, 0 %>
+  <%= f.label "Sort by: " %>
+  <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
+  <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']] %>
+  <%= f.submit "Run Query" %>
+<% end %>
+<!-- Next button if more exist -->
+<table class = "container">
+  <thead>
+    <tr>
+      <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
+      <th> rawr<!-- Filter name here --> </th>
+      <!-- @col_names is a pre-sorted list of columns -->
+      <% @col_names.each do |col| %>
+        <th><%= col.unique_name %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Render the first K rows in one of two modes:
+         - Alphabetical
+         - Top-K, where default K = 20
+    -->
+  </tbody>
+</table>
