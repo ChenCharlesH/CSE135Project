@@ -5,14 +5,15 @@ class AnalyticsController < ApplicationController
     @col_names = Product.limit(10).offset(0)
     # Default customers
     @row_names = User.limit(10).offset(0)
+    @query_results =
   end
 
   # AJAX for query.
   def query()
     params = params[:filter_options]
-    soc = params[:filter_options][:state_or_cust]
-    aot = params[:filter_options][:alpha_or_top]
-    page = params[:filter_options][:page]
+    @soc = params[:filter_options][:state_or_cust]
+    @aot = params[:filter_options][:alpha_or_top]
+    @page = params[:filter_options][:page]
     @query_results = helper_query 0
   end
 
