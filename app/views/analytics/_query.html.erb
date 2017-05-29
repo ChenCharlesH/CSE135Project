@@ -8,35 +8,44 @@
     @page += 1
     submit button displays is next
 %>
+<%
+  # Due to AJAX limitations, variables are stored in this array packet.
+  # Do not remove this.
+  @state_or_cust = @values[:soc]
+  @alpha_or_top = @values[:aot]
+  @row_page = @values[:row_page]
+  @col_page = @values[:col_page]
+  @col_names = @values[:col_names]
+  @row_names = @values[:row_names]
+  @query_results = @values[:query_results]
+%>
 <%= @state_or_cust %>
 <%= @alpha_or_top %>
 <%= @row_page %>
 <%= @col_page %>
-<%= @query_results.to_a %>
 <h1> Sales Analytics </h1>
 <!-- Hidden form for keeping track of the page's displayed rows -->
-<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <%= hidden_field_tag :row_page, @row_page + 1 %>
+<%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
+  <%= hidden_field_tag :row_page, @row_page.to_i + 1 %>
+  <%= hidden_field_tag :col_page, @col_page.to_i %>
   <%= hidden_field_tag :state_or_cust, @state_or_cust %>
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 20 Records" %>
 <% end %>
 
 <!-- Hidden form for keeping track of the page's displayed columns -->
-<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <%= hidden_field_tag :col_page, @col_page + 1 %>
+<%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
+  <%= hidden_field_tag :col_page, @col_page.to_i + 1 %>
+  <%= hidden_field_tag :row_page, @row_page.to_i %>
   <%= hidden_field_tag :state_or_cust, @state_or_cust %>
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 10 Columns" %>
 <% end %>
 
 <!-- Form for the user to select filter options -->
-<%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <%= hidden_field_tag :row_page, @row_page %>
-  <%= hidden_field_tag :col_page, @col_page %>
+<%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
+  <%= hidden_field_tag :row_page, @row_page.to_i %>
+  <%= hidden_field_tag :col_page, @col_page.to_i %>
   <%= f.label "Sort by: " %>
   <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
   <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']] %>

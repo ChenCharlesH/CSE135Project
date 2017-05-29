@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     # AJAX related stuff.
     get "products/search" => "products#search"
     get "browse/search" => "browse#search"
-    get "analytics/query" => "analytics#query"
+    post "analytics/query" => "analytics#query"
 
     post "orders/confirm" => "orders#confirm"
   end

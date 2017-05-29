@@ -4,6 +4,8 @@
 Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( browse.js )
 Rails.application.config.assets.precompile += %w( products.js )
+Rails.application.config.assets.precompile += %w( analytics.js )
+
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 
