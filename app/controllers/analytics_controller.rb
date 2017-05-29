@@ -69,6 +69,8 @@ class AnalyticsController < ApplicationController
     ORDER BY up.user_id;"
 
     con.execute(str)
+  rescue e
+    return []
   end
 
   # Strong parameters
