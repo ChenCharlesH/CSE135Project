@@ -19,8 +19,10 @@ Rails.application.routes.draw do
     # Overriden get for orders in order to support product adding.
     get "orders/new/:product_id" => "orders#new"
 
+    # AJAX related stuff.
     get "products/search" => "products#search"
     get "browse/search" => "browse#search"
+    get "analytics/query" => "analytics#query"
 
     post "orders/confirm" => "orders#confirm"
   end

@@ -69,7 +69,7 @@ class AnalyticsController < ApplicationController
     ORDER BY up.user_id;"
 
     con.execute(str)
-  rescue e
+  rescue
     return []
   end
 

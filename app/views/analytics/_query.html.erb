@@ -12,6 +12,7 @@
 <%= @alpha_or_top %>
 <%= @row_page %>
 <%= @col_page %>
+<%= @query_results.to_a %>
 <h1> Sales Analytics </h1>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post" do |f| %>
