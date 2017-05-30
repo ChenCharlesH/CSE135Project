@@ -3,6 +3,17 @@
   <!-- Below the header will reside a N x 2 table containing similar products -->
   <table class = "container">
     <thead>
+      <th> People who purchased: </th>
+      <th> Might also be interested in: </th>
     </thead>
+    <tbody>
+      <!-- sim_prod is an array of arrays containing the top 100 similar products -->
+      <% @sim_prod.each do |prod1,prod2| %>
+        <tr>
+          <td> <%= prod1.unique_name %> </td>
+          <td> <%= prod2.unique_name %> </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>

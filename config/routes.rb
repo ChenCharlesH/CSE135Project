@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :create]
 
     resources :analytics, only: [:index]
+    resources :similar, only: [:index]
 
     # Overriden get for orders in order to support product adding.
     get "orders/new/:product_id" => "orders#new"
