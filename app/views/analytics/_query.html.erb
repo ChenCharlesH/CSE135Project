@@ -1,13 +1,3 @@
-<%# Insert body query here. %>
-<%# Add another form %>
-<%# TODO: Add form for filters
-    Page different
-%>
-<%# TODO: Add form for the pages
-    Will have all @ variables as hidden fields.
-    @page += 1
-    submit button displays is next
-%>
 <%
   # Due to AJAX limitations, variables are stored in this array packet.
   # Do not remove this.
@@ -61,18 +51,20 @@
   </thead>
   <tbody>
     <% @query_results.each_slice(10) do |r| %>
-      <tr>
-        <!-- Get the customer's name and display it in the box. -->
-        <td> <%= r.first.first[1] %> </td>
-        <% r.each do |c| %>
-          <td>
-            <!-- c.to_a[2][1] is the price of the item and c.to_a[3][1] is the
-                 quantity.
-            -->
-            <%= c.to_a[2][1].to_i * c.to_a[3][1].to_i %>
-          </td>
-        <% end %>
-      </tr>
+      <% if @state_or_cust.to_s == "customer" %>
+        <tr>
+          <!-- Get the customer's name and display it in the box. -->
+          <td> <%= r.first.first[1] %> </td>
+          <% r.each do |c| %>
+            <td>
+              <!-- c.to_a[2][1] is the price of the item and c.to_a[3][1] is the
+                   quantity.
+              -->
+              <%= c.to_a[2][1].to_i * c.to_a[3][1].to_i %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
