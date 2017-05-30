@@ -58,10 +58,10 @@ ORDER BY up.user_id;
 # You can then multiply price by quantity to get each matrix element.
 
 # Similar Products:
-SELECT sales.uid as user, sales.pid as product, (sales.p * sales.q) as total
+SELECT
 FROM
 	(
-	SELECT up.user_id as uid, up.product_id as pid, up.price as p, coal.quantity as q
+	SELECT up.user_id as uid, up.product_id as pid, (up.price * coal.quantity) as total
 	FROM
 	(
 		SELECT u.unique_name as user_unique_name, p.unique_name as product_unique_name,
@@ -87,4 +87,4 @@ FROM
 	ON
 	up.user_id = coal.user AND
 	up.product_id = coal.product) AS sales
-	GROUP BY sales.product
+	WHERE 
