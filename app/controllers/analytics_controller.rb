@@ -1,6 +1,6 @@
 class AnalyticsController < ApplicationController
   before_filter :authorize_owner
-  
+
   def index()
     # Offset?
     col_names = Product.select(:id, :unique_name).limit(10).offset(0)
@@ -96,7 +96,6 @@ class AnalyticsController < ApplicationController
 end
 
   # List of state abbreviations
-<<<<<<< HEAD
   def us_states
     [
       ['AK', 'AK'],

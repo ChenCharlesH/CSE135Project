@@ -51,7 +51,7 @@
   </thead>
   <tbody>
     <% @query_results.each_slice(10) do |r| %>
-      <% if @state_or_cust.to_s == "customer" %>
+      <% if @state_or_cust == "customer" %>
         <tr>
           <!-- Get the customer's name and display it in the box. -->
           <td> <%= r.first.first[1] %> </td>
