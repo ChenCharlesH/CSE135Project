@@ -1,10 +1,9 @@
 class AnalyticsController < ApplicationController
-
   def index()
     # Offset?
     col_names = Product.select(:id, :unique_name).limit(10).offset(0)
     # Default customers
-    row_names = User.select(:id, :unique_name).limit(10).offset(0)
+    row_names = User.select(:id, :unique_name).limit(20).offset(0)
     # Set default values
     state_or_cust = "customer"
     alpha_or_top = "alpha"
@@ -21,15 +20,18 @@ class AnalyticsController < ApplicationController
     alpha_or_top = params[:alpha_or_top]
 
     row_page = params[:row_page]
+    rp_statement = row_page.to_i * 20
     col_page = params[:col_page]
+    cl_statement = col_page.to_i * 10
 
-    col_names = Product.limit(10).offset(col_page)
+    #TODO: Double check basecase
+    col_names = Product.limit(10).offset(cl_statement)
 
     if state_or_cust == "customer"
-      row_names = User.limit(10).offset(row_page)
+      row_names = User.limit(20).offset(rp_statement)
     else
       # TODO: Allow user name updating.
-      row_names = User.limit(10).offset(row_page)
+      row_names = User.limit(20).offset(rp_statement)
     end
 
     query_results = helper_query col_names, row_names
@@ -49,10 +51,10 @@ class AnalyticsController < ApplicationController
     "SELECT up.user_unique_name, up.product_unique_name, up.price, coal.quantity
     FROM
     (
-    	SELECT u.unique_name as user_unique_name, p.unique_name as product_unique_name,
-    				 u.id AS user_id, p.id AS product_id, p.price as price
-    	FROM
-    		(
+      SELECT u.unique_name as user_unique_name, p.unique_name as product_unique_name,
+             u.id AS user_id, p.id AS product_id, p.price as price
+      FROM
+        (
           SELECT ui.unique_name, ui.id
           FROM Users ui
           WHERE ui.id IN (#{user.join(", ")})
@@ -62,13 +64,13 @@ class AnalyticsController < ApplicationController
           FROM Products pi
           WHERE pi.id IN (#{prod.join(", ")})
         ) AS p
-      LIMIT 100
+      LIMIT 200
     ) AS up
-    FULL OUTER JOIN
+    LEFT OUTER JOIN
     (
-    	SELECT purchin.user, purchin.product, SUM(purchin.quantity) AS quantity
-    	FROM Purchases purchin
-    	GROUP BY purchin.user, purchin.product
+      SELECT purchin.user, purchin.product, SUM(purchin.quantity) AS quantity
+      FROM Purchases purchin
+      GROUP BY purchin.user, purchin.product
     ) AS coal
     ON
     up.user_id = coal.user AND
@@ -92,7 +94,7 @@ class AnalyticsController < ApplicationController
 end
 
   # List of state abbreviations
-  def states[
+@@states =  [
     'AL',
     'AK',
     'AZ',
