@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20170503232028) do
     t.datetime "time",       default: '2017-05-10 20:47:13', null: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.index    ["user"], name: "index_purchases_on_user", using: :btree
+    t.index    ["product"], name: "index_purchases_on_product", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

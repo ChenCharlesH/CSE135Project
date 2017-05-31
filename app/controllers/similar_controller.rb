@@ -2,13 +2,22 @@ class SimilarController < ApplicationController
 
   def index()
     @sim_prod = helper_query
+    prod_id = []
+    @sim_prod.each do |p|
+      prod_id << p["pido"] << p["pidt"]
+    end
+    prod_id = prod_id.uniq
+
+    @prod_name = Product.select("id, unique_name").where("id in (?)", prod_id).to_a
+    @prod_name = @prod_name.map{|h| [h["id"], h["unique_name"]]}.to_h
   end
 
   def helper_query()
     con = ActiveRecord::Base.connection
 
     query_str =
-    "WITH setw AS (
+    "
+    WITH setw AS (
     SELECT sales.uid AS uid, sales.pid as pid, sales.total AS total
     FROM
     (
@@ -54,7 +63,8 @@ class SimilarController < ApplicationController
     ) as summing
   ) as ordered
   ORDER BY cosine
-  LIMIT 100;"
+  LIMIT 100;
+  "
 
     con.execute(query_str)
 
