@@ -7,15 +7,15 @@ class AnalyticsController < ApplicationController
     # Default customers
     #row_names = User.select(:id, :unique_name).limit(20).offset(0)
     # Set default values
-    state_or_cust = "state"
+    state_or_cust = "customer"
     alpha_or_top = "alpha"
     col_page = 0
     row_page = 0
+    rp_statement = row_page.to_i * 20
+
     if state_or_cust == "customer"
       row_names = User.limit(20).offset(rp_statement)
     else
-      # TODO: Allow user name updating.
-      # row_names = User.limit(20).offset(rp_statement)
       if ((row_page.to_i + 1) * 20) > us_states.length
         row_names = us_states[rp_statement, us_states.length]
       else
@@ -56,7 +56,7 @@ class AnalyticsController < ApplicationController
 
     query_results = helper_query col_names, row_names, state_or_cust
 
-    @values = {state_or_cust: state_or_cust, alpha_or_top: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
+    @values = {soc: state_or_cust, aot: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
     render :layout=>false
   end
 
@@ -65,10 +65,11 @@ class AnalyticsController < ApplicationController
     con = ActiveRecord::Base.connection
 
     prod = prod_q.map{|p| p.id}
+
     if soc == "customer"
       user = user_q.map{|u| u.id}
     else
-      user = user_q.map{|u| u.first}
+      user = user_q.map{|u| "'" + u.first + "'"}
     end
 
 
@@ -103,7 +104,7 @@ class AnalyticsController < ApplicationController
     ORDER BY up.user_id, up.product_id;"
 
     state_str =
-    "SELECT up.state, up.product_unique_name, (up.price * coal.quantity) as total
+    "SELECT up.state, up.product_unique_name, SUM(up.price * coal.quantity) as total
     FROM
     (
       SELECT u.state as state, p.unique_name as product_unique_name,
@@ -130,16 +131,17 @@ class AnalyticsController < ApplicationController
     ON
     up.user_id = coal.user AND
     up.product_id = coal.product
-    GROUP BY up.state;"
+    GROUP BY up.state, up.product_unique_name
+    ORDER BY up.state, up.product_unique_name;"
 
   if soc == "customer"
     con.execute(cust_str)
-  elsif soc == "state"
+  else
     con.execute(state_str)
   end
 
-  #rescue
-    #return []
+  rescue
+    return []
   end
 
   # Strong parameters

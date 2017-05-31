@@ -9,7 +9,6 @@
   @row_names = @values[:row_names]
   @query_results = @values[:query_results]
 %>
-<%= @query_results.to_a %>
 <h1> Sales Analytics </h1>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
@@ -34,8 +33,8 @@
   <%= hidden_field_tag :row_page, @row_page.to_i %>
   <%= hidden_field_tag :col_page, @col_page.to_i %>
   <%= f.label "Sort by: " %>
-  <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']] %>
-  <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']] %>
+  <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']], :selected=>@state_or_cust %>
+  <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']], :selected=>@alpha_or_top %>
   <%= f.submit "Run Query" %>
 <% end %>
 <!-- Next button if more exist -->
