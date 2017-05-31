@@ -1,0 +1,36 @@
+================================INDICES REPORT==================================
+
+For Sales Analytics, we're constantly accessing the Purchases table of our
+database, namely the User and Product fields.  We believe that these two columns
+may be good candidates for indexing, since we're frequently accessing them and
+never updating them.  We considered indexing the Quantity field, but this field
+is sparsely used, and would not likely outperform the overhead of adding such
+an index.
+
+Control Group - No Indices:
+
+a. Overall running time:
+(Large and Cold):
+
+Test 1: 366ms
+Test 2: 345ms
+Test 3: 362ms
+
+(Small and Hot):
+
+Test 1: 22ms
+Test 2: 27ms
+Test 3: 21ms
+
+b. Running time of individual queries:
+(Large and Cold)
+
+Test 1: 2.6ms
+Test 2: 2.4ms
+Test 3: 2.6ms
+
+(Small and Hot):
+
+Test 1: 0.9ms
+Test 2: 0.8ms
+Test 3: 1.0ms
