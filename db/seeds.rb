@@ -56,3 +56,40 @@ numProd.times do |i|
   price = Faker::Number.decimal(2)
   Product.create(category_id: cat_id, unique_name: name, sku: sku, price: price, created_at: create, updated_at: update)
 end
+
+# Insert Purchases
+numPurchases = 1000
+# Random purchases
+numPurchases.times do |i|
+  user_id = rand(maxUsersPerGroup * 2) + 1
+  product_id = rand(numProd) + 1
+  quantity = rand(1000) + 1
+  Purchase.create(user: user_id, product: product_id, quantity: quantity)
+end
+
+# Random correlation
+numCorr = 5
+corr_prod = []
+# Generate user_id
+numCorr.times do |i|
+  corr_prod << rand(numProd) + 1
+end
+numCorr.times do |i|
+  user_id = rand(maxUsersPerGroup * 2) + 1
+  quantity = rand(100)
+  numCorr.times do |d|
+    Purchase.create(user: user_id, product: corr_prod[d], quantity: quantity)
+  end
+end
+
+# Fixed correlated stuff.
+numCorr = 100
+corr_prod = 1
+numCorr.times do |i|
+  user_id = rand(maxUsersPerGroup * 2) + 1
+  quantity = 10000
+  numCorr.times do |d|
+    Purchase.create(user: user_id, product: corr_prod, quantity: quantity)
+    Purchase.create(user: user_id, product: corr_prod + 1, quantity: quantity)
+  end
+end
