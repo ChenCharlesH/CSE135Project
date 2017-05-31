@@ -1,4 +1,6 @@
 class AnalyticsController < ApplicationController
+  before_filter :authorize_owner
+
   def index()
     # Offset?
     col_names = Product.select(:id, :unique_name).limit(10).offset(0)
@@ -10,7 +12,7 @@ class AnalyticsController < ApplicationController
     col_page = 0
     row_page = 0
     query_results = helper_query col_names, row_names
-    @values = {state_or_cust: state_or_cust, alpha_or_top: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
+    @values = {soc: state_or_cust, aot: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
   end
 
   # AJAX for query.
@@ -94,57 +96,58 @@ class AnalyticsController < ApplicationController
 end
 
   # List of state abbreviations
-@@states =  [
-    'AL',
-    'AK',
-    'AZ',
-    'AR',
-    'CA',
-    'CO',
-    'CT',
-    'DE',
-    'DC',
-    'FL',
-    'GA',
-    'HI',
-    'ID',
-    'IL',
-    'IN',
-    'IA',
-    'KS',
-    'KY',
-    'LA',
-    'ME',
-    'MD',
-    'MA',
-    'MI',
-    'MN',
-    'MS',
-    'MO',
-    'MT',
-    'NE',
-    'NV',
-    'NH',
-    'NJ',
-    'NM',
-    'NY',
-    'NC',
-    'ND',
-    'OH',
-    'OK',
-    'OR',
-    'PA',
-    'PR',
-    'RI',
-    'SC',
-    'SD',
-    'TN',
-    'TX',
-    'UT',
-    'VT',
-    'VA',
-    'WA',
-    'WV',
-    'WI',
-    'WY'
-  ]
+  def us_states
+    [
+      ['AK', 'AK'],
+      ['AL', 'AL'],
+      ['AR', 'AR'],
+      ['AZ', 'AZ'],
+      ['CA', 'CA'],
+      ['CO', 'CO'],
+      ['CT', 'CT'],
+      ['DC', 'DC'],
+      ['DE', 'DE'],
+      ['FL', 'FL'],
+      ['GA', 'GA'],
+      ['HI', 'HI'],
+      ['IA', 'IA'],
+      ['ID', 'ID'],
+      ['IL', 'IL'],
+      ['IN', 'IN'],
+      ['KS', 'KS'],
+      ['KY', 'KY'],
+      ['LA', 'LA'],
+      ['MA', 'MA'],
+      ['MD', 'MD'],
+      ['ME', 'ME'],
+      ['MI', 'MI'],
+      ['MN', 'MN'],
+      ['MO', 'MO'],
+      ['MS', 'MS'],
+      ['MT', 'MT'],
+      ['NC', 'NC'],
+      ['ND', 'ND'],
+      ['NE', 'NE'],
+      ['NH', 'NH'],
+      ['NJ', 'NJ'],
+      ['NM', 'NM'],
+      ['NV', 'NV'],
+      ['NY', 'NY'],
+      ['OH', 'OH'],
+      ['OK', 'OK'],
+      ['OR', 'OR'],
+      ['PA', 'PA'],
+      ['RI', 'RI'],
+      ['SC', 'SC'],
+      ['SD', 'SD'],
+      ['TN', 'TN'],
+      ['TX', 'TX'],
+      ['UT', 'UT'],
+      ['VA', 'VA'],
+      ['VT', 'VT'],
+      ['WA', 'WA'],
+      ['WI', 'WI'],
+      ['WV', 'WV'],
+      ['WY', 'WY']
+    ]
+  end
