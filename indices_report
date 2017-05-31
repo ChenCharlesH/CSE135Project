@@ -34,3 +34,42 @@ Test 3: 2.6ms
 Test 1: 0.9ms
 Test 2: 0.8ms
 Test 3: 1.0ms
+
+Experimental Group - With User and Product Indices:
+
+a. Overall running time:
+(Large and Cold):
+
+Test 1: 350ms
+Test 2: 349ms
+Test 3: 350ms
+
+(Small and Hot):
+
+Test 1: 23ms
+Test 2: 25ms
+Test 3: 21ms
+
+b. Running time of individual queries:
+(Large and Cold):
+
+Test 1: 0.209ms
+Test 2: 0.313ms
+Test 3: 0.315ms
+
+(Small and Hot):
+
+Test 1: 0.206ms
+Test 2: 0.224ms
+Test 3: 0.206ms
+
+=================================Analysis=======================================
+
+As it turns out, using indices on a data set that is only 10 items large
+doesn't result in much of a performance increase.  We can observe a minor
+performance increase in terms of the runtime of individual queries above, but
+when it comes to fully rendering the page, the AJAX and JS appear to dominate.
+Utilizing the User and Product indices in the Purchases table could be
+beneficial if we ever needed to scale up the number of columns displayed at one
+time, however.  Thus, we shall keep them, since they appear to only be helping
+increase performance.
