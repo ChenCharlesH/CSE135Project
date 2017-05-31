@@ -67,7 +67,7 @@ Products Browsing
 ==========================================================
 
 
-Protip: The category browser on the left hand side can be 
+Protip: The category browser on the left hand side can be
 summoned by clicking on the magnifying glass.
 
 We decided not to hide the navbar on this page to maintain
@@ -96,6 +96,30 @@ Confirmation
 
 
 No extraordinary assumptions were made for this page.
+
+
+==========================================================
+Analytics
+==========================================================
+
+
+We have opted for a local maximum column ordering, as the
+write-up is not specific about this condition.
+
+
+==========================================================
+Similar Products
+==========================================================
+
+
+The write-up does not specifically forbid commutative
+pairs in similar products, so we have included them. These
+pairs can actually be valuable because of how humans read
+through tables such as this one.  Users have a tendency to
+scan the left-hand side of tables for the item they are
+interested in and most often only look toward the right
+hand values when a left hand value has caught their
+interest.
 
 
 ==========================================================
