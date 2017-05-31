@@ -1,3 +1,4 @@
+<%= @sim_prod.to_a %>
 <div class = "main_container">
   <h1> Similar Products </h1>
   <!-- Below the header will reside a N x 2 table containing similar products -->
@@ -11,8 +12,8 @@
       <% unless @sim_prod.nil? %>
         <% @sim_prod.each do |prods| %>
           <tr>
-            <td> <%= prods[:pido].to_i %> </td>
-            <td> <%= prods[:pidt].to_i %> </td>
+            <td> <%= prods["pido"] %> </td>
+            <td> <%= prods["pidt"] %> </td>
           </tr>
         <% end %>
       <% end %>
