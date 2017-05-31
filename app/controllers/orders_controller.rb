@@ -9,8 +9,9 @@ class OrdersController < ApplicationController
   # Basic function to display cart
   def index()
     @carts = current_user.carts.all
+
     # Generate Products
-    @product_id = @carts.map{|h| h.id }
+    @product_id = @carts.map{|h| h.product_id }
     @products = Product.where("id IN (?)", @product_id)
   end
 
@@ -52,7 +53,6 @@ class OrdersController < ApplicationController
 
   rescue => e
     render text: e.message
-    return
     redirect_to "/orders", flash: {notice: "Failed to buy cart."}
   end
 
