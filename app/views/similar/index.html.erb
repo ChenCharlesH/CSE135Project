@@ -9,10 +9,10 @@
     <tbody>
       <!-- sim_prod is an array of arrays containing the top 100 similar products -->
       <% unless @sim_prod.nil? %>
-        <% @sim_prod.each do |prod1,prod2| %>
+        <% @sim_prod.each do |prods| %>
           <tr>
-            <td> <%= prod1.unique_name %> </td>
-            <td> <%= prod2.unique_name %> </td>
+            <td> <%= prods[:pido].to_i %> </td>
+            <td> <%= prods[:pidt].to_i %> </td>
           </tr>
         <% end %>
       <% end %>
