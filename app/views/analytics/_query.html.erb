@@ -23,8 +23,6 @@
   <%= f.submit "Run Query" %>
 <% end %>
 
-<ul>
-<li>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :row_page, @row_page.to_i + 1 %>
@@ -33,10 +31,8 @@
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 20 Records" %>
 <% end %>
-</li>
 
 <!-- Hidden form for keeping track of the page's displayed columns -->
-<li>
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :col_page, @col_page.to_i + 1 %>
   <%= hidden_field_tag :row_page, @row_page.to_i %>
@@ -44,8 +40,6 @@
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 10 Columns" %>
 <% end %>
-</li>
-</ul>
 
 <!-- Next button if more exist -->
 <table class = "container">
