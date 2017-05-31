@@ -102,3 +102,4 @@ FROM
   ) as summing
 ) as ordered
 ORDER BY cosine
+LIMIT 100;

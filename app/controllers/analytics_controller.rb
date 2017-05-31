@@ -16,14 +16,9 @@ class AnalyticsController < ApplicationController
     if state_or_cust == "customer"
       row_names = User.limit(20).offset(rp_statement)
     else
-      if ((row_page.to_i + 1) * 20) > us_states.length
-        row_names = us_states[rp_statement, us_states.length]
-      else
         row_names = us_states[row_page.to_i * 20, (row_page.to_i + 1) * 20]
-      end
-
     end
-    query_results = helper_query col_names, row_names, state_or_cust
+    query_results = helper_query col_names, row_names, state_or_cust, alpha_or_top
     @values = {soc: state_or_cust, aot: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
   end
 
@@ -40,13 +35,26 @@ class AnalyticsController < ApplicationController
 
     #TODO: Double check basecase
     col_names = Product.limit(10).offset(cl_statement)
+    # Ran out of things to go through.
+    if col_names.length <= 0
+      col_page = String(col_page.to_i - 1)
+      col_names = Product.limit(10).offset(cl_statement - 10)
+      flash[:alert] = "Max columns reached."
+    end
 
     if state_or_cust == "customer"
       row_names = User.limit(20).offset(rp_statement)
+      # Case when we run out of stuff.
+      if row_names.length <= 0
+        row_page = String(row_page.to_i - 1)
+        row_names = Product.limit(20).offset(rp_statement - 20)
+        row_names = User.limit(20).offset(rp_statement - 20)
+        flash[:alert] = "Max records reached."
+      end
     else
-      # TODO: Allow user name updating.
-      # row_names = User.limit(20).offset(rp_statement)
       if ((row_page.to_i + 1) * 20) > us_states.length
+        flash[:alert] = "Max records reached."
+        row_page = String(row_page.to_i - 1)
         row_names = us_states[rp_statement, us_states.length]
       else
         row_names = us_states[row_page.to_i * 20, (row_page.to_i + 1) * 20]
@@ -54,14 +62,16 @@ class AnalyticsController < ApplicationController
 
     end
 
-    query_results = helper_query col_names, row_names, state_or_cust
+    query_results = helper_query col_names, row_names, state_or_cust, alpha_or_top
 
     @values = {soc: state_or_cust, aot: alpha_or_top, row_page: row_page, col_page: col_page, col_names: col_names, row_names:row_names, query_results: query_results}
     render :layout=>false
+  rescue
+    redirect_to "/analytics", flash: {alert: "Query error."}
   end
 
   # Get the object we need from query.
-  def helper_query(prod_q, user_q, soc)
+  def helper_query(prod_q, user_q, soc, aot)
     con = ActiveRecord::Base.connection
 
     prod = prod_q.map{|p| p.id}
@@ -70,6 +80,11 @@ class AnalyticsController < ApplicationController
       user = user_q.map{|u| u.id}
     else
       user = user_q.map{|u| "'" + u.first + "'"}
+    end
+
+    if aot != "alpha"
+      # SQL INJECTION ON OWN CODE, 1337
+      order = "total, "
     end
 
 
@@ -101,7 +116,7 @@ class AnalyticsController < ApplicationController
     ON
     up.user_id = coal.user AND
     up.product_id = coal.product
-    ORDER BY up.user_id, up.product_id;"
+    ORDER BY #{order} up.user_id, up.product_id;"
 
     state_str =
     "SELECT up.state, up.product_unique_name, SUM(up.price * coal.quantity) as total
@@ -132,7 +147,7 @@ class AnalyticsController < ApplicationController
     up.user_id = coal.user AND
     up.product_id = coal.product
     GROUP BY up.state, up.product_unique_name
-    ORDER BY up.state, up.product_unique_name;"
+    ORDER BY #{order} up.state, up.product_unique_name;"
 
   if soc == "customer"
     con.execute(cust_str)

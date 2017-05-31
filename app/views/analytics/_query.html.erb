@@ -9,7 +9,22 @@
   @row_names = @values[:row_names]
   @query_results = @values[:query_results]
 %>
+<p class="notice"> <%= notice %> </p>
+<p class="alert"> <%= alert %> </p>
 <h1> Sales Analytics </h1>
+
+<!-- Form for the user to select filter options -->
+<%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
+  <%= hidden_field_tag :row_page, 0 %>
+  <%= hidden_field_tag :col_page, 0 %>
+  <%= f.label "Sort by: " %>
+  <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']], :selected=>@state_or_cust %>
+  <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']], :selected=>@alpha_or_top %>
+  <%= f.submit "Run Query" %>
+<% end %>
+
+<ul>
+<li>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :row_page, @row_page.to_i + 1 %>
@@ -18,8 +33,10 @@
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 20 Records" %>
 <% end %>
+</li>
 
 <!-- Hidden form for keeping track of the page's displayed columns -->
+<li>
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
   <%= hidden_field_tag :col_page, @col_page.to_i + 1 %>
   <%= hidden_field_tag :row_page, @row_page.to_i %>
@@ -27,16 +44,9 @@
   <%= hidden_field_tag :alpha_or_top, @alpha_or_top %>
   <%= f.submit "Next 10 Columns" %>
 <% end %>
+</li>
+</ul>
 
-<!-- Form for the user to select filter options -->
-<%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
-  <%= hidden_field_tag :row_page, @row_page.to_i %>
-  <%= hidden_field_tag :col_page, @col_page.to_i %>
-  <%= f.label "Sort by: " %>
-  <%= f.select :state_or_cust, [['Customer Name', 'customer'],['State','state']], :selected=>@state_or_cust %>
-  <%= f.select :alpha_or_top, [['Alphabetical','alpha'],['Top Sales','top']], :selected=>@alpha_or_top %>
-  <%= f.submit "Run Query" %>
-<% end %>
 <!-- Next button if more exist -->
 <table class = "container">
   <thead>
@@ -50,7 +60,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @query_results.each_slice(10) do |r| %>
+    <% @query_results.each_slice(@col_names.length) do |r| %>
       <tr>
         <!-- Get the customer's name and display it in the box. -->
         <td> <%= r.first.first[1] %> </td>
