@@ -9,6 +9,7 @@
   @row_names = @values[:row_names]
   @query_results = @values[:query_results]
 %>
+<%= @query_results.to_a %>
 <h1> Sales Analytics </h1>
 <!-- Hidden form for keeping track of the page's displayed rows -->
 <%= form_for :filter_options, url: "analytics", :method=> "post", html: {class: "filter_options"} do |f| %>
@@ -51,20 +52,16 @@
   </thead>
   <tbody>
     <% @query_results.each_slice(10) do |r| %>
-      <% if @state_or_cust == "customer" %>
-        <tr>
-          <!-- Get the customer's name and display it in the box. -->
-          <td> <%= r.first.first[1] %> </td>
-          <% r.each do |c| %>
-            <td>
-              <!-- c.to_a[2][1] is the price of the item and c.to_a[3][1] is the
-                   quantity.
-              -->
-              <%= c.to_a[2][1].to_i * c.to_a[3][1].to_i %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
+      <tr>
+        <!-- Get the customer's name and display it in the box. -->
+        <td> <%= r.first.first[1] %> </td>
+        <% r.each do |c| %>
+          <td>
+            <!-- c.to_a[2][1] is the total sales of that item by customer/state -->
+            <%= c.to_a[2][1].to_i %>
+          </td>
+        <% end %>
+      </tr>
     <% end %>
   </tbody>
 </table>
