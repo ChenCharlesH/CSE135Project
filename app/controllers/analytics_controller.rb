@@ -3,7 +3,25 @@ class AnalyticsController < ApplicationController
 
   def index()
     # Offset?
-    col_names = Product.select(:id, :unique_name).limit(10).offset(0)
+
+    @cat_obj = Category.all
+    @cat_options = @cat_obj.map{|h| h.id}
+
+    # Setting the category values.
+    if params.has_key?("filter") && params["filter"].has_key?("category_id")
+      @cat = cat_param[:category_id].to_i
+      if !@cat_options.include?(@cat)
+        @cat = -1
+      end
+    else
+      @cat = -1
+    end
+
+    if @cat == -1
+      col_names = Product.select(:id, :unique_name).limit(10)
+    else
+      col_names = Product.select(:id, :unique_name).limit(10).where(category_id: @cat)
+    end
 
     query_results = helper_query col_names, us_states
     @values = {col_names: col_names, row_names: us_states, query_results: query_results}
@@ -11,7 +29,7 @@ class AnalyticsController < ApplicationController
 
   # AJAX for query.
   def query()
-    #TODO: Double check basecase
+    # TODO: Does not need to check cat because of refresh policy.
     col_names = Product.limit(10).offset(cl_statement)
     # Ran out of things to go through.
     if col_names.length <= 0
@@ -34,6 +52,7 @@ class AnalyticsController < ApplicationController
 
     prod = prod_q.map{|p| p.id}
 
+    # TODO: Refactor user_q and remove.
     user = user_q.map{|u| "'" + u.first + "'"}
 
     # SQL INJECTION ON OWN CODE, 1337
@@ -49,7 +68,6 @@ class AnalyticsController < ApplicationController
         (
           SELECT ui.state, ui.id
           FROM Users ui
-          WHERE ui.state IN (#{user.join(", ")})
         ) AS u,
         (
           SELECT pi.unique_name, pi.id, pi.price
@@ -74,6 +92,10 @@ class AnalyticsController < ApplicationController
     rescue
       return []
   end
+end
+
+def cat_param
+    params.require(:filter).permit("category_id")
 end
 
   # List of state abbreviations

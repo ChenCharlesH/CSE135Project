@@ -5,11 +5,19 @@
   @row_names = @values[:row_names]
   @query_results = @values[:query_results]
 %>
+
 <p class="notice"> <%= notice %> </p>
 <p class="alert"> <%= alert %> </p>
 <h1> Sales Analytics </h1>
 
+<br />
+<%= form_for "filter", url: "analytics", :method=> "get" do |f| %>
+<%= f.collection_select :category_id, @cat_obj, :id, :unique_name, {:include_blank => "All", selected: @cat}%>
+<%= f.submit "Run"%>
+<% end %>
 <table class = "container">
+<%= button_to "Run", "analytics", :method=> :get %>
+<%= button_to "Run", "analytics", :method=> :get, style: "float: right;" %>
   <thead>
     <tr>
       <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
@@ -35,3 +43,5 @@
     <% end %>
   </tbody>
 </table>
+<%= button_to "Run", "analytics", :method=> :get, style: "float: left;" %>
+<%= button_to "Run", "analytics", :method=> :get, style: "float: right;" %>
