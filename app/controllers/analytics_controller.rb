@@ -52,6 +52,7 @@ class AnalyticsController < ApplicationController
 
     prod = prod_q.map{|p| p.id}
 
+    # TODO: Refactor user_q and remove.
     user = user_q.map{|u| "'" + u.first + "'"}
 
     # SQL INJECTION ON OWN CODE, 1337
@@ -67,7 +68,6 @@ class AnalyticsController < ApplicationController
         (
           SELECT ui.state, ui.id
           FROM Users ui
-          WHERE ui.state IN (#{user.join(", ")})
         ) AS u,
         (
           SELECT pi.unique_name, pi.id, pi.price
