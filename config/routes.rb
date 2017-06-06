@@ -14,7 +14,6 @@ Rails.application.routes.draw do
     resources :products, only: [:index, :create, :update, :destroy]
     resources :orders, only: [:index, :create]
 
-    resources :analytics, only: [:index]
     resources :similar, only: [:index]
 
     # Overriden get for orders in order to support product adding.
@@ -23,6 +22,10 @@ Rails.application.routes.draw do
     # AJAX related stuff.
     get "products/search" => "products#search"
     get "browse/search" => "browse#search"
+
+    # Category stuff
+    get "analytics" => "analytics#index"
+    get "analytics/:cat" => "analytics#index"
     post "analytics/query" => "analytics#query"
 
     post "orders/confirm" => "orders#confirm"
