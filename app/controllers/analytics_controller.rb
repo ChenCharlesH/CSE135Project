@@ -17,7 +17,11 @@ class AnalyticsController < ApplicationController
       @cat = -1
     end
 
-    col_names = Product.select(:id, :unique_name).limit(10).offset(0).where(category_id: @cat)
+    if @cat == -1
+      col_names = Product.select(:id, :unique_name).limit(10)
+    else
+      col_names = Product.select(:id, :unique_name).limit(10).where(category_id: @cat)
+    end
 
     query_results = helper_query col_names, us_states
     @values = {col_names: col_names, row_names: us_states, query_results: query_results}
