@@ -13,7 +13,14 @@ function bind(form) {
   });
 };
 
+// TODO: Add arrays to keep track of red, top 50, and purple for state changes.
+
 var ready = function(){
+  // Test purpling
+  // $(".col1").fadeOut(1000).fadeIn(1000);
+  // $(".col1").addClass("purple");
+  // $(".col3").addClass("red");
+
   // Side bar menu
   $('.filter_options').submit(function(){
     bind($(this));

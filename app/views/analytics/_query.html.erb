@@ -31,7 +31,7 @@
       <!-- @col_names is a list of columns -->
       <% @col_names.each_with_index do |col, ind| %>
         <% @col_sum = @matrix.map{|e| e[ind]["total"].to_i}.reduce(:+) %>
-        <th><%= truncate(col.unique_name, length: 13) + "\n" +"($" + @col_sum.to_s + ")" %></th>
+        <th class='<%= "col" + ind.to_s %>' ><%= truncate(col.unique_name, length: 13) + "\n" +"($" + @col_sum.to_s + ")" %></th>
       <% end %>
     </tr>
   </thead>
@@ -49,7 +49,7 @@
         <td> <%= r.first.first[1] + " ($" + @row_sum.to_s + ")" %> </td>
         <% @c_count = 0 %>
         <% r.each do |c| %>
-          <td id = '<%= @r_count.to_s + "," + @c_count.to_s %>'>
+          <td id = '<%= @r_count.to_s + "," + @c_count.to_s %>' class = '<%= "col" + @c_count.to_s %>'>
             <!-- c.to_a[2][1] is the total sales of that item by state -->
             <%= c.to_a[2][1].to_i %>
           </td>
