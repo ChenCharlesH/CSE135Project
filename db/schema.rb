@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170606021506) do
+ActiveRecord::Schema.define(version: 20170607072932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,4 +96,13 @@ ActiveRecord::Schema.define(version: 20170606021506) do
   add_foreign_key "new_purchases", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "top50s", "categories"
+  create_trigger("purchases_after_insert_row_tr", :generated => true, :compatibility => 1).
+      on("purchases").
+      after(:insert) do
+    <<-SQL_ACTIONS
+      INSERT INTO new_purchases(user_id, product_id, quantity, time, created_at, updated_at)
+      VALUES(NEW.user,NEW.product,NEW.quantity,NEW.time,NEW.created_at,NEW.updated_at);
+    SQL_ACTIONS
+  end
+
 end

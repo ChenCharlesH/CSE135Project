@@ -52,7 +52,6 @@ class OrdersController < ApplicationController
     end
 
   rescue => e
-    render text: e.message
     redirect_to "/orders", flash: {notice: "Failed to buy cart."}
   end
 
