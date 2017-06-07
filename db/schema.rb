@@ -61,21 +61,9 @@ ActiveRecord::Schema.define(version: 20170607072932) do
     t.integer  "user",                                       null: false
     t.integer  "product",                                    null: false
     t.integer  "quantity",                                   null: false
-    t.datetime "time",       default: '2017-05-10 20:47:13', null: false
+    t.datetime "time",       default: '2017-06-07 23:02:27', null: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.index ["product"], name: "index_purchases_on_product", using: :btree
-    t.index ["user"], name: "index_purchases_on_user", using: :btree
-  end
-
-  create_table "top50s", force: :cascade do |t|
-    t.string   "state",        null: false
-    t.string   "product_name", null: false
-    t.integer  "category_id",  null: false
-    t.integer  "total",        null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["category_id"], name: "index_top50s_on_category_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -95,7 +83,6 @@ ActiveRecord::Schema.define(version: 20170607072932) do
   add_foreign_key "new_purchases", "products"
   add_foreign_key "new_purchases", "users"
   add_foreign_key "products", "categories"
-  add_foreign_key "top50s", "categories"
   create_trigger("purchases_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("purchases").
       after(:insert) do
