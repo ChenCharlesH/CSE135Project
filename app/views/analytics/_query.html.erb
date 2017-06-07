@@ -21,24 +21,42 @@
   <thead>
     <tr>
       <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
+      <!-- Generate Matrix -->
+      <% @matrix = Array.new %>
+      <% @query_results.each_slice(@col_names.length) do |r| %>
+        <% @matrix << r %>
+      <% end %>
+
       <th> State </th>
       <!-- @col_names is a list of columns -->
-      <% @col_names.each do |col| %>
-        <th><%= truncate(col.unique_name, length: 13) %></th>
+      <% @col_names.each_with_index do |col, ind| %>
+        <% @col_sum = @matrix.map{|e| e[ind]["total"].to_i}.reduce(:+) %>
+        <th><%= truncate(col.unique_name, length: 13) + "\n" +"($" + @col_sum.to_s + ")" %></th>
       <% end %>
     </tr>
   </thead>
   <tbody>
-    <% @query_results.each_slice(@col_names.length) do |r| %>
-      <tr>
-        <!-- Get the state abbreviation and display it in the box. -->
-        <td> <%= r.first.first[1] %> </td>
+    <% @r_count = 0 %>
+    <% @matrix.map do |r| %>
+      <tr id='<%= @r_count%>'>
+        <%# Create total count per row.%>
+        <% @row_sum = 0 %>
         <% r.each do |c| %>
-          <td>
+          <% @row_sum += c.to_a[2][1].to_i %>
+        <% end %>
+
+        <!-- Get the state abbreviation and display it in the box. -->
+        <td> <%= r.first.first[1] + " ($" + @row_sum.to_s + ")" %> </td>
+        <% @c_count = 0 %>
+        <% r.each do |c| %>
+          <td id = '<%= @r_count.to_s + "," + @c_count.to_s %>'>
             <!-- c.to_a[2][1] is the total sales of that item by state -->
             <%= c.to_a[2][1].to_i %>
           </td>
+          <% @c_count += 1 %>
         <% end %>
+
+        <% @r_count += 1 %>
       </tr>
     <% end %>
   </tbody>

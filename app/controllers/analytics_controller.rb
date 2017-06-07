@@ -58,6 +58,7 @@ class AnalyticsController < ApplicationController
     # SQL INJECTION ON OWN CODE, 1337
     order = "total, "
 
+    # TODO: Add insert from select statement
     state_str =
     "SELECT up.state, up.product_unique_name, SUM(up.price * coal.quantity) as total
     FROM
