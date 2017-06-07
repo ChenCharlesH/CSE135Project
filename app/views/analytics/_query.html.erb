@@ -4,6 +4,7 @@
   @col_names = @values[:col_names]
   @row_names = @values[:row_names]
   @query_results = @values[:query_results]
+  @matrix = @values[:matrix]
 %>
 
 <p class="notice"> <%= notice %> </p>
@@ -20,43 +21,64 @@
 <%= button_to "Run", "analytics", :method=> :get, style: "float: right;" %>
   <thead>
     <tr>
-      <!-- Depending on the filter, the first column should be 'Customer' or 'State' -->
-      <!-- Generate Matrix -->
-      <% @matrix = Array.new %>
-      <% @query_results.each_slice(@col_names.length) do |r| %>
-        <% @matrix << r %>
-      <% end %>
-
       <th> State </th>
       <!-- @col_names is a list of columns -->
-      <% @col_names.each_with_index do |col, ind| %>
-        <% @col_sum = @matrix.map{|e| e[ind]["total"].to_i}.reduce(:+) %>
-        <th class='<%= "col" + ind.to_s %>' ><%= truncate(col.unique_name, length: 13) + "\n" +"($" + @col_sum.to_s + ")" %></th>
+      <% @col_sum_a = Array.new %>
+      <%
+        @col_names.each_with_index do |col, ind|
+        @col_sum = @matrix.map{|e| e[ind]["total"].to_i}.reduce(:+)
+        @col_sum_a << @col_sum
+      %>
       <% end %>
+
+    <!-- Sort Indexes -->
+    <%
+       @col_sum_a = @col_sum_a.each_with_index.map{|x,i| [x, i]}
+       @col_sum_a = @col_sum_a.sort.reverse
+
+       # Display header in sorted order.
+       @col_sum_a.each_with_index do |col, ind|
+    %>
+        <th class='<%= "col" + ind.to_s %>' ><%= truncate(@col_names[col[1]].unique_name, length: 13) + "\n" +"($" + col[0].to_s + ")" %></th>
+       <%end%>
+
     </tr>
   </thead>
   <tbody>
-    <% @r_count = 0 %>
-    <% @matrix.map do |r| %>
+
+    <!-- Generate Row Sum -->
+    <%
+       @row_sum_a = Array.new
+       @matrix.map do |r|
+         @row_sum = 0
+         r.each do |c|
+           @row_sum += c["total"].to_i
+         end
+         @row_sum_a << @row_sum
+       end
+    %>
+
+    <!-- Order it -->
+    <%
+       @row_sum_a = @row_sum_a.each_with_index.map{|x,i| [x, i]}
+       @row_sum_a = @row_sum_a.sort.reverse
+    %>
+
+
+    <% @row_sum_a.each_with_index do |rs, rsc| %>
+      <% indrs = rs[1] %>
       <tr id='<%= @r_count%>'>
-        <%# Create total count per row.%>
-        <% @row_sum = 0 %>
-        <% r.each do |c| %>
-          <% @row_sum += c.to_a[2][1].to_i %>
-        <% end %>
 
         <!-- Get the state abbreviation and display it in the box. -->
-        <td> <%= r.first.first[1] + " ($" + @row_sum.to_s + ")" %> </td>
-        <% @c_count = 0 %>
-        <% r.each do |c| %>
-          <td id = '<%= @r_count.to_s + "," + @c_count.to_s %>' class = '<%= "col" + @c_count.to_s %>'>
-            <!-- c.to_a[2][1] is the total sales of that item by state -->
-            <%= c.to_a[2][1].to_i %>
-          </td>
-          <% @c_count += 1 %>
-        <% end %>
+        <td> <%= @matrix[indrs].first["state"] + " ($" + rs[0].to_s + ")" %> </td>
 
-        <% @r_count += 1 %>
+        <% @col_sum_a.each_with_index do |cs, rcs| %>
+          <% indcs = cs[1] %>
+          <td id = '<%= rsc.to_s + "," + rcs.to_s %>' class = '<%= "col" + rcs.to_s %>'>
+            <!-- c.to_a[2][1] is the total sales of that item by state -->
+            <%= @matrix[indrs][indcs]["total"].to_i %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

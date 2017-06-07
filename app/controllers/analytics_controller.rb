@@ -24,7 +24,12 @@ class AnalyticsController < ApplicationController
     end
 
     query_results = helper_query col_names, us_states
-    @values = {col_names: col_names, row_names: us_states, query_results: query_results}
+    matrix = Array.new
+    query_results.each_slice(col_names.length) do |r|
+      matrix << r
+    end
+
+    @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
   end
 
   # AJAX for query.
@@ -40,7 +45,7 @@ class AnalyticsController < ApplicationController
 
     query_results = helper_query col_names, us_states
 
-    @values = {col_names: col_names, row_names: us_states, query_results: query_results}
+    @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
     render :layout=>false
   rescue
     redirect_to "/analytics", flash: {alert: "Query error."}
@@ -56,7 +61,6 @@ class AnalyticsController < ApplicationController
     user = user_q.map{|u| "'" + u.first + "'"}
 
     # SQL INJECTION ON OWN CODE, 1337
-    order = "total, "
 
     # TODO: Add insert from select statement
     state_str =
@@ -80,13 +84,14 @@ class AnalyticsController < ApplicationController
     (
       SELECT purchin.user, purchin.product, SUM(purchin.quantity) AS quantity
       FROM Purchases purchin
+      WHERE purchin.product IN (#{prod.join(", ")})
       GROUP BY purchin.user, purchin.product
     ) AS coal
     ON
     up.user_id = coal.user AND
     up.product_id = coal.product
     GROUP BY up.state, up.product_unique_name
-    ORDER BY #{order} up.state, up.product_unique_name;"
+    ORDER BY up.state, up.product_unique_name;"
 
     con.execute(state_str)
 
