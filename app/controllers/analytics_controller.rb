@@ -52,11 +52,11 @@ class AnalyticsController < ApplicationController
     # Get columns product ids associated with products that have changed.
     sql =
     "
-    SELECT
+    SELECT COALESCE(SUM(p.quantity), 0) AS totalQ
     FROM Purchases p
     WHERE p.product IN (#{prods})
-
-
+    GROUP BY p.product
+    ORDER BY totalQ
     "
 
 
