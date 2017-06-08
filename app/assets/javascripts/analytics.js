@@ -23,9 +23,14 @@ var ready = function(){
   // alert(jQuery.parseJSON(us_table)[3].id);
 
   // Convert data to readable data.
-  us_table = jQuery.parseJSON(us_table);
-  col_sum_a = jQuery.parseJSON(col_sum_a);
-  row_sum_a = jQuery.parseJSON(row_sum_a);
+  if(typeof us_table !== 'undefined')
+    us_table = jQuery.parseJSON(us_table);
+
+  if(typeof col_sum_a !== 'undefined')
+    col_sum_a = jQuery.parseJSON(col_sum_a);
+
+  if(typeof row_sum_a !== 'undefined')
+    row_sum_a = jQuery.parseJSON(row_sum_a);
 
   // Side bar menu
   $('.filter_options').submit(function(){

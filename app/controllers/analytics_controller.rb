@@ -41,9 +41,23 @@ class AnalyticsController < ApplicationController
   def refresh()
     # Get list of values that have changed.
     new_purch = NewPurchase.all
-    prod_col = new_purch.map{|e| e.product_id}.uniq
+
+    if new_purch.length != 0
+      prod_col = new_purch.map{|e| e.product_id}.uniq
+      prods = prod_col.join(", ")
+    else
+      return []
+    end
 
     # Get columns product ids associated with products that have changed.
+    sql =
+    "
+    SELECT
+    FROM Purchases p
+    WHERE p.product IN (#{prods})
+
+
+    "
 
 
   end
@@ -62,7 +76,6 @@ class AnalyticsController < ApplicationController
     values_sum_a = values_sum_a.sort.reverse
     return values_sum_a
   end
-
 
   # Generate the column sums
   def sort_sum_col_value(values, matrix)

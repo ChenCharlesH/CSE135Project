@@ -1,5 +1,8 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+  config.assets.precompile += %w( browse.js )
+  config.assets.precompile += %w( products.js )
+  config.assets.precompile += %w( analytics.js )
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
