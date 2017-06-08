@@ -26,10 +26,6 @@
 
     <!-- Sort Indexes -->
     <%
-      # Generate the column values.
-       @col_sum_a = @col_sum_a.each_with_index.map{|x,i| [x, i, @col_names[i]["id"]]}
-       @col_sum_a = @col_sum_a.sort.reverse
-
        # Display header in sorted order.
        @col_sum_a.each_with_index do |col, ind|
     %>
