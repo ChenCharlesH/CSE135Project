@@ -17,8 +17,8 @@
 <%= f.submit "Run"%>
 <% end %>
 <table class = "container">
-<%= button_to "Run", "analytics", :method=> :get %>
-<%= button_to "Run", "analytics", :method=> :get, style: "float: right;" %>
+<%= button_to "Refresh", "analytics", :method=> :get, class: "refresh", style: "float: left;" %>
+<%= button_to "Refresh", "analytics", :method=> :get, class: "refresh", style: "float: right;" %>
   <thead>
     <tr>
       <th> State </th>
@@ -55,5 +55,5 @@
     <% end %>
   </tbody>
 </table>
-<%= button_to "Run", "analytics", :method=> :get, style: "float: left;" %>
-<%= button_to "Run", "analytics", :method=> :get, style: "float: right;" %>
+<%= button_to "Refresh", "analytics", :method=> :get, class: "refresh", style: "float: left;" %>
+<%= button_to "Refresh", "analytics", :method=> :get, class: "refresh", style: "float: right;" %>

@@ -1,4 +1,3 @@
-<%= @added_columns %>
 <%= javascript_tag do %>
-  values = '<%= %>';
+  diff = '<%= raw j @diff_values.to_json %>';
 <% end %>

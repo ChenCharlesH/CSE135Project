@@ -1,13 +1,13 @@
 function bind(form) {
-    var url = "/analytics/query"; // search action
-    var formData = form.serialize();
-
+    var url = "/analytics/refresh"; // search action
     $.ajax({
-      type: "POST",
+      type: "GET",
       url: url,
-      data: formData,
+      data: "",
       success: function(html) { // AJAX
         $("#refresh_result").html(html); // Replace the "results" div with the result
+        // TODO: Add parsing logic here and update the page!
+        alert(diff);
         ready()
     }
   });
@@ -23,6 +23,7 @@ var ready = function(){
   // alert(jQuery.parseJSON(us_table)[3].id);
 
   // Convert data to readable data.
+  /*
   if(typeof us_table !== 'undefined')
     us_table = jQuery.parseJSON(us_table);
 
@@ -31,9 +32,10 @@ var ready = function(){
 
   if(typeof row_sum_a !== 'undefined')
     row_sum_a = jQuery.parseJSON(row_sum_a);
+    */
 
   // Side bar menu
-  $('.filter_options').submit(function(){
+  $('.refresh').click(function(){
     bind($(this));
     return false;
   });

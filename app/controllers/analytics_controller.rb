@@ -39,6 +39,13 @@ class AnalyticsController < ApplicationController
 
   # AJAX for refreshing
   def refresh()
+    # Contains new matrix values that have been changed.
+    @diff_values = diff_query.to_a
+
+    render :layout=>false
+  end
+
+  def diff_query()
     # Get list of values that have changed.
     new_purch = NewPurchase.all
 
@@ -49,17 +56,41 @@ class AnalyticsController < ApplicationController
       return []
     end
 
+    con = ActiveRecord::Base.connection
     # Get columns product ids associated with products that have changed.
+    # TODO: Figure out a way to accomondate for size of new purchase query.
     sql =
     "
-    SELECT COALESCE(SUM(p.quantity), 0) AS totalQ
-    FROM Purchases p
-    WHERE p.product IN (#{prods})
-    GROUP BY p.product
-    ORDER BY totalQ
-    "
+    SELECT up.product_unique_name, up.product_id, SUM(up.price * coal.quantity) as total
+    FROM
+    (
+      SELECT u.state as state, p.unique_name as product_unique_name,
+             u.id AS user_id, p.id AS product_id, p.price as price
+      FROM
+        (
+          SELECT ui.state, ui.id
+          FROM Users ui
+        ) AS u,
+        (
+          SELECT pi.unique_name, pi.id, pi.price
+          FROM Products pi
+          WHERE pi.id IN (#{prods})
+        ) AS p
+    ) AS up
+    LEFT OUTER JOIN
+    (
+      SELECT p.user_id, p.product_id, SUM(p.quantity) AS quantity
+      FROM New_Purchases p
+      WHERE p.product_id IN (#{prods})
+      GROUP BY p.user_id, p.product_id
+    ) AS coal
+    ON
+    up.user_id = coal.user_id AND
+    up.product_id = coal.product_id
+    GROUP BY up.product_id, up.product_unique_name
+    ORDER BY up.product_id;"
 
-
+    return con.execute(sql)
   end
 
   def sort_sum_row_value(values, matrix)

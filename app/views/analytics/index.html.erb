@@ -1,9 +1,9 @@
 <%= javascript_include_tag "analytics" %>
 <div id = "refresh_result">
 <%= javascript_tag do %>
-  us_table = '<%=  raw(@us_table.to_json) %>';
-  col_sum_a = '<%=  raw(@col_sum_a.to_json) %>';
-  row_sum_a = '<%=  raw(@row_sum_a.to_json) %>';
+  us_table = '<%=  raw j @us_table.to_json %>';
+  col_sum_a = '<%=  raw j @col_sum_a.to_json %>';
+  row_sum_a = '<%=  raw j @row_sum_a.to_json %>';
 <% end %>
 </div>
 <div>
