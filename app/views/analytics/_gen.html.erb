@@ -23,17 +23,11 @@
     <tr>
       <th> State </th>
       <!-- @col_names is a list of columns -->
-      <% @col_sum_a = Array.new %>
-      <%
-        @col_names.each_with_index do |col, ind|
-        @col_sum = @matrix.map{|e| e[ind]["total"].to_i}.reduce(:+)
-        @col_sum_a << @col_sum
-      %>
-      <% end %>
 
     <!-- Sort Indexes -->
     <%
-       @col_sum_a = @col_sum_a.each_with_index.map{|x,i| [x, i]}
+      # Generate the column values.
+       @col_sum_a = @col_sum_a.each_with_index.map{|x,i| [x, i, @col_names[i]["id"]]}
        @col_sum_a = @col_sum_a.sort.reverse
 
        # Display header in sorted order.
@@ -45,24 +39,6 @@
     </tr>
   </thead>
   <tbody>
-
-    <!-- Generate Row Sum -->
-    <%
-       @row_sum_a = Array.new
-       @matrix.map do |r|
-         @row_sum = 0
-         r.each do |c|
-           @row_sum += c["total"].to_i
-         end
-         @row_sum_a << @row_sum
-       end
-    %>
-
-    <!-- Order it -->
-    <%
-       @row_sum_a = @row_sum_a.each_with_index.map{|x,i| [x, i]}
-       @row_sum_a = @row_sum_a.sort.reverse
-    %>
 
 
     <% @row_sum_a.each_with_index do |rs, rsc| %>

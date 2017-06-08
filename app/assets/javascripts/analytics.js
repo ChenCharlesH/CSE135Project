@@ -7,7 +7,7 @@ function bind(form) {
       url: url,
       data: formData,
       success: function(html) { // AJAX
-        $("#query_result").html(html); // Replace the "results" div with the result
+        $("#refresh_result").html(html); // Replace the "results" div with the result
         ready()
     }
   });
@@ -20,6 +20,12 @@ var ready = function(){
   // $(".col1").fadeOut(1000).fadeIn(1000);
   // $(".col1").addClass("purple");
   // $(".col3").addClass("red");
+  // alert(jQuery.parseJSON(us_table)[3].id);
+
+  // Convert data to readable data.
+  us_table = jQuery.parseJSON(us_table);
+  col_sum_a = jQuery.parseJSON(col_sum_a);
+  row_sum_a = jQuery.parseJSON(row_sum_a);
 
   // Side bar menu
   $('.filter_options').submit(function(){

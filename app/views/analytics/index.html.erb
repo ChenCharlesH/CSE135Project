@@ -1,4 +1,11 @@
 <%= javascript_include_tag "analytics" %>
-<div id = "query_result">
-  <%= render "analytics/query" %>
+<div id = "refresh_result">
+<%= javascript_tag do %>
+  us_table = '<%=  raw(@us_table.to_json) %>';
+  col_sum_a = '<%=  raw(@col_sum_a.to_json) %>';
+  row_sum_a = '<%=  raw(@row_sum_a.to_json) %>';
+<% end %>
+</div>
+<div>
+  <%= render "analytics/gen" %>
 </div>

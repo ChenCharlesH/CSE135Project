@@ -26,8 +26,7 @@ Rails.application.routes.draw do
 
     # Category stuff
     get "analytics" => "analytics#index"
-    get "analytics/:cat" => "analytics#index"
-    post "analytics/query" => "analytics#query"
+    get "analytics/refresh" => "analytics#refresh"
 
     post "orders/confirm" => "orders#confirm"
     post "buynorder/generate"

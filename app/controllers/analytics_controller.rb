@@ -2,6 +2,7 @@ class AnalyticsController < ApplicationController
   before_filter :authorize_owner
 
   def index()
+    transport_query
     # Offset?
 
     @cat_obj = Category.all
@@ -25,7 +26,56 @@ class AnalyticsController < ApplicationController
       matrix << r
     end
 
+    # Generate index for US states.
+    us_state_vals = us_states
+    @us_table = us_state_vals.each_with_index.map{|v, i| {unique_name: v, id: i}}
+
+    # Generate Row indexing
+    @col_sum_a = sort_sum_col_value(col_names, matrix)
+    @row_sum_a = sort_sum_row_value(@us_table, matrix)
+
     @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
+  end
+
+  # AJAX for refreshing
+  def refresh()
+    # Get list of values that have changed.
+    new_purch = NewPurchase.all
+    prod_col = new_purch.map{|e| e.product_id}.uniq
+
+    # Get columns product ids associated with products that have changed.
+
+
+  end
+
+  def sort_sum_row_value(values, matrix)
+    values_sum_a = Array.new
+    matrix.map do |r|
+        values_sum = 0
+        r.each do |c|
+          values_sum += c["total"].to_i
+        end
+        values_sum_a << values_sum
+    end
+
+    values_sum_a = values_sum_a.each_with_index.map{|x, i| [x, i, values[i][:id]]}
+    values_sum_a = values_sum_a.sort.reverse
+    return values_sum_a
+  end
+
+
+  # Generate the column sums
+  def sort_sum_col_value(values, matrix)
+    val_sum_a = Array.new
+    values.each_with_index do |col, ind|
+      val_sum = matrix.map{|e| e[ind]["total"].to_i}.reduce(:+)
+      val_sum_a << val_sum
+    end
+
+    # append the db id at the end of each val_sum_a
+    val_sum_a = val_sum_a.each_with_index.map{|x, i| [x, i, values[i]["id"]]}
+    val_sum_a = val_sum_a.sort.reverse
+    return val_sum_a
   end
 
   # Grabs the id and name of the top products
@@ -35,7 +85,7 @@ class AnalyticsController < ApplicationController
     if cat == -1
       cat = ""
     else
-      cat = "WHERE prod.cat = #{cat.to_s}"
+      cat = "WHERE prod.category_id = #{cat.to_s}"
     end
 
     sql = "
@@ -65,27 +115,29 @@ class AnalyticsController < ApplicationController
       return []
   end
 
-  # AJAX for query.
-  def query()
-    # TODO: Does not need to check cat because of refresh policy.
-    col_names = Product.limit(50).offset(cl_statement)
-    # Ran out of things to go through.
-    if col_names.length <= 0
-      col_page = String(col_page.to_i - 1)
-      col_names = Product.limit(50).offset(cl_statement - 10)
-      flash[:alert] = "Max columns reached."
-    end
 
-    query_results = helper_query col_names, us_states
+# Move our precomputations
+def transport_query()
+  # Do it all in one trasaction.
+  con = ActiveRecord::Base.connection
 
-    @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
-    render :layout=>false
-  rescue
-    redirect_to "/analytics", flash: {alert: "Query error."}
-  end
+  # Import precomputation back in.
+  sql = '
+  START TRANSACTION;
+  INSERT INTO public.Purchases ("user",product,quantity,time,created_at,updated_at)
+  SELECT np.user_id, np.product_id, np.quantity, np.time, np.created_at, np.updated_at
+  FROM New_Purchases AS np;
+
+  TRUNCATE TABLE New_Purchases;
+
+  COMMIT;
+  '
+
+    con.execute(sql)
+end
 
   # Get the object we need from query.
-  def helper_query(prod_q, user_q)
+def helper_query(prod_q, user_q)
     con = ActiveRecord::Base.connection
 
     prod = prod_q.map{|p| p["id"]}
