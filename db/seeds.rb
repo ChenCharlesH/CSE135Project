@@ -58,6 +58,7 @@ numProd.times do |i|
 end
 
 # Insert Purchases
+=begin
 numPurchases = 1000
 # Random purchases
 numPurchases.times do |i|
@@ -93,3 +94,4 @@ numCorr.times do |i|
     Purchase.create(user: user_id, product: corr_prod + 1, quantity: quantity)
   end
 end
+=end

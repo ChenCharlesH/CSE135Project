@@ -39,7 +39,7 @@
        # Display header in sorted order.
        @col_sum_a.each_with_index do |col, ind|
     %>
-        <th class='<%= "col" + ind.to_s %>' ><%= truncate(@col_names[col[1]].unique_name, length: 13) + "\n" +"($" + col[0].to_s + ")" %></th>
+        <th class='<%= "col" + ind.to_s %>' style="font-size:11px;" ><%= truncate(@col_names[col[1]]["unique_name"], length: 13) + "\n" +"($" + col[0].to_s + ")" %></th>
        <%end%>
 
     </tr>

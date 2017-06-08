@@ -17,11 +17,7 @@ class AnalyticsController < ApplicationController
       @cat = -1
     end
 
-    if @cat == -1
-      col_names = Product.select(:id, :unique_name).limit(10)
-    else
-      col_names = Product.select(:id, :unique_name).limit(10).where(category_id: @cat)
-    end
+    col_names = top_prod_query(@cat).to_a
 
     query_results = helper_query col_names, us_states
     matrix = Array.new
@@ -32,14 +28,51 @@ class AnalyticsController < ApplicationController
     @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
   end
 
+  # Grabs the id and name of the top products
+  def top_prod_query(cat)
+    con = ActiveRecord::Base.connection
+
+    if cat == -1
+      cat = ""
+    else
+      cat = "WHERE prod.cat = #{cat.to_s}"
+    end
+
+    sql = "
+      SELECT topkek.id, topkek.unique_name
+      FROM
+      (
+        SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
+        FROM Products prod
+        LEFT OUTER JOIN
+        (
+          SELECT purch.product, SUM(purch.quantity) AS totalQuantity
+          FROM Purchases purch
+          GROUP BY purch.product
+          ORDER BY totalQuantity
+        ) AS pur
+        ON prod.id = pur.product
+        #{cat}
+        ORDER BY total DESC
+        LIMIT 50
+      ) AS topkek
+      ORDER BY topkek.unique_name;
+      "
+
+  return con.execute(sql)
+
+  rescue
+      return []
+  end
+
   # AJAX for query.
   def query()
     # TODO: Does not need to check cat because of refresh policy.
-    col_names = Product.limit(10).offset(cl_statement)
+    col_names = Product.limit(50).offset(cl_statement)
     # Ran out of things to go through.
     if col_names.length <= 0
       col_page = String(col_page.to_i - 1)
-      col_names = Product.limit(10).offset(cl_statement - 10)
+      col_names = Product.limit(50).offset(cl_statement - 10)
       flash[:alert] = "Max columns reached."
     end
 
@@ -55,7 +88,7 @@ class AnalyticsController < ApplicationController
   def helper_query(prod_q, user_q)
     con = ActiveRecord::Base.connection
 
-    prod = prod_q.map{|p| p.id}
+    prod = prod_q.map{|p| p["id"]}
 
     # TODO: Refactor user_q and remove.
     user = user_q.map{|u| "'" + u.first + "'"}
@@ -63,6 +96,7 @@ class AnalyticsController < ApplicationController
     # SQL INJECTION ON OWN CODE, 1337
 
     # TODO: Add insert from select statement
+    # TODO: Check SUM runtime.
     state_str =
     "SELECT up.state, up.product_unique_name, SUM(up.price * coal.quantity) as total
     FROM
@@ -93,7 +127,7 @@ class AnalyticsController < ApplicationController
     GROUP BY up.state, up.product_unique_name
     ORDER BY up.state, up.product_unique_name;"
 
-    con.execute(state_str)
+    return con.execute(state_str)
 
     rescue
       return []
