@@ -87,17 +87,17 @@ function updateColumn(key){
       elem =  $(id_val);
 
       // Get diff value.
-      value = 0;
+      value = Number(0);
       if(diff[i]["total"] != null)
-        value = diff[i]["total"];
+        value = Number(diff[i]["total"]);
 
-      html_value = parseInt(elem.val());
+      html_value = Number(elem.attr("value"));
       // Check if no change
       if(html_value == value + html_value)
         break;
 
       // Update the element!
-      elem.html(html_value + value);
+      elem.html(Number(html_value + value));
       elem.addClass("red");
     }
   }

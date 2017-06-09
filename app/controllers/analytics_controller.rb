@@ -85,12 +85,12 @@ class AnalyticsController < ApplicationController
       FROM Products prod
       LEFT OUTER JOIN
       (
-        SELECT purch.product, SUM(purch.quantity) AS totalQuantity
+        SELECT purch.product_id, SUM(purch.quantity) AS totalQuantity
         FROM New_Purchases purch
-        GROUP BY purch.product
+        GROUP BY purch.product_id
         ORDER BY totalQuantity
       ) AS pur
-      ON prod.id = pur.product
+      ON prod.id = pur.product_id
       ORDER BY total DESC
       LIMIT 50
     ) AS topkek
@@ -98,6 +98,7 @@ class AnalyticsController < ApplicationController
     "
 
     diff_column_sum = con.execute(top_sql)
+    pp diff_column_sum
     # No changes whatsoever.
     if diff_column_sum[0]["total"] == 0
       diff_column_sum = []
