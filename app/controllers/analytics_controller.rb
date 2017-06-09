@@ -78,40 +78,31 @@ class AnalyticsController < ApplicationController
     # Generate top columns
     top_sql =
     "
-    SELECT up.product_id, COALESCE(SUM(up.price * coal.quantity),0) as total
+    SELECT topkek.id AS product_id, topkek.unique_name, topkek.total
     FROM
     (
-      SELECT u.state as state,
-             u.id AS user_id, p.id AS product_id, p.price as price
-      FROM
-        (
-          SELECT ui.state, ui.id
-          FROM Users ui
-        ) AS u,
-        (
-          SELECT pi.id, pi.price
-          FROM Products pi
-        ) AS p
-    ) AS up
-    LEFT OUTER JOIN
-    (
-      SELECT p.user_id, p.product_id, SUM(p.quantity) AS quantity
-      FROM New_Purchases p
-      GROUP BY p.user_id, p.product_id
-    ) AS coal
-    ON
-    up.user_id = coal.user_id AND
-    up.product_id = coal.product_id
-    GROUP BY up.product_id
-    ORDER BY total DESC
-    LIMIT 50;
+      SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
+      FROM Products prod
+      LEFT OUTER JOIN
+      (
+        SELECT purch.product, SUM(purch.quantity) AS totalQuantity
+        FROM Purchases purch
+        GROUP BY purch.product
+        ORDER BY totalQuantity
+      ) AS pur
+      ON prod.id = pur.product
+      ORDER BY total DESC
+      LIMIT 50
+    ) AS topkek
+    ORDER BY topkek.unique_name;
     "
 
     diff_column_sum = con.execute(top_sql)
-    prods = diff_column_sum.map { |e|  e["product_id"]}
-    if prods.length == 0
-      return []
+    # No changes whatsoever.
+    if diff_column_sum[0]["total"] == 0
+      diff_column_sum = []
     end
+    prods = diff_column_sum.map { |e|  e["product_id"]}
 
     # Get all relevant products
     prods_ids = [*prods, *also_prods].uniq
@@ -120,7 +111,7 @@ class AnalyticsController < ApplicationController
     # Get columns product ids associated with products that have changed.
     sql =
     "
-    SELECT up.product_unique_name, up.product_id, up.state, SUM(up.price * coal.quantity) as total
+    SELECT up.product_unique_name, up.product_id, up.state, COALESCE(SUM(up.price * coal.quantity), 0) as total
     FROM
     (
       SELECT u.state as state, p.unique_name as product_unique_name,
@@ -147,7 +138,7 @@ class AnalyticsController < ApplicationController
     up.user_id = coal.user_id AND
     up.product_id = coal.product_id
     GROUP BY up.state, up.product_id, up.product_unique_name
-    ORDER BY up.product_id;"
+    ORDER BY up.state, up.product_id;"
 
     return diff_column_sum, con.execute(sql), prods_ids
   end

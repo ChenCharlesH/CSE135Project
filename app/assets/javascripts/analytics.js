@@ -22,21 +22,28 @@ function updatePage(){
   // Compare the column sums in ordered size.
   // Calculate new sum values.
   // Contains actual new sums.
-  // |diff_column_sum| >= |col_sum_a|
-  var new_sum_a = {};
+  // |diff_column_sum| <= |col_sum_a|
+  // Copy the col_sum_a
+  new_sum_a = {}
+  for(var key in col_sum_a){
+    if(col_sum_a[key][0] == null)
+      new_sum_a[key] = 0;
+    else
+      new_sum_a[key] = col_sum_a[key][0];
+  }
+
   for(var key in diff_column_sum){
     val = 0
     if (diff_column_sum[key] != null){
       val = diff_column_sum[key];
     }
-    if(key in col_sum_a)
-      new_sum_a[key] = val + col_sum_a[key][0];
+
+    if(key in new_sum_a)
+      new_sum_a[key] = val + new_sum_a[key];
     else {
       new_sum_a[key] = val;
     }
   }
-
-  alert(JSON.stringify(diff));
 
   sort_new_sum_a = sortMapByValue50(new_sum_a);
   text = "New Top 50:"
@@ -75,7 +82,7 @@ function updateColumn(key){
       row_num = row_sum_a[state.toString()][1];
 
       // Update the id to the correct value.
-      id_val = "#" + row_num + col_num;
+      id_val = "#" + col_num + row_num;
       elem =  $(id_val);
 
       // Get diff value.
