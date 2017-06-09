@@ -86,7 +86,7 @@ class AnalyticsController < ApplicationController
       LEFT OUTER JOIN
       (
         SELECT purch.product, SUM(purch.quantity) AS totalQuantity
-        FROM Purchases purch
+        FROM New_Purchases purch
         GROUP BY purch.product
         ORDER BY totalQuantity
       ) AS pur

@@ -25,6 +25,7 @@ function updatePage(){
   // |diff_column_sum| <= |col_sum_a|
   // Copy the col_sum_a
   new_sum_a = {}
+  alert(JSON.stringify(diff));
   for(var key in col_sum_a){
     if(col_sum_a[key][0] == null)
       new_sum_a[key] = 0;
@@ -82,7 +83,7 @@ function updateColumn(key){
       row_num = row_sum_a[state.toString()][1];
 
       // Update the id to the correct value.
-      id_val = "#" + col_num + row_num;
+      id_val = "#" + row_num + col_num;
       elem =  $(id_val);
 
       // Get diff value.
@@ -90,9 +91,9 @@ function updateColumn(key){
       if(diff[i]["total"] != null)
         value = diff[i]["total"];
 
-      html_value = parseInt(elem.html());
+      html_value = parseInt(elem.val());
       // Check if no change
-      if(html_value == value)
+      if(html_value == value + html_value)
         break;
 
       // Update the element!
