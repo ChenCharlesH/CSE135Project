@@ -3,7 +3,7 @@ function bind(form) {
     $.ajax({
       type: "POST",
       url: url,
-      data: {list_cols: JSON.stringify(list_cols)},
+      data: {list_cols: JSON.stringify(list_cols), cat: JSON.stringify($("#filter_category_id").find(":selected").val())},
       success: function(html) { // AJAX
         $("#refresh_result").html(html); // Replace the "results" div with the result
         processData();
@@ -62,7 +62,7 @@ function updatePage(){
           name = diff[i]["product_unique_name"]
         }
       }
-        text += name + " is now in top 50." + " <br />";
+        text += name + " is now in top." + " <br />";
     }
   }
   $("#text_result").html(text);
@@ -119,7 +119,7 @@ function sortMapByValue50(map)
     var tupleArray = [];
     for (var key in map) tupleArray.push([key, map[key]]);
     tupleArray.sort(function (a, b) { return b[1] - a[1] });
-    tupleArray = tupleArray.slice(0, 50);
+    tupleArray = tupleArray.slice(0, Object.keys(list_cols).length);
     result = {};
     for (var i = 0; i < tupleArray.length; ++i) result[tupleArray[i][0]] = tupleArray[i][1];
     return result;

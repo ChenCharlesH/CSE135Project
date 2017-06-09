@@ -54,7 +54,8 @@ class AnalyticsController < ApplicationController
   def refresh()
     # Contains new matrix values that have been changed.
     list_cols = JSON.parse(params["list_cols"])
-    diff = diff_query list_cols
+    cat = JSON.parse(params["cat"])
+    diff = diff_query list_cols, cat
     @diff_values = diff[1]
 
     # Order only reflects decreasing order, not matrix order.
@@ -72,8 +73,13 @@ class AnalyticsController < ApplicationController
     render :layout=>false
   end
 
-  def diff_query(also_prods)
+  def diff_query(also_prods, cat)
     con = ActiveRecord::Base.connection
+    p cat
+
+    if is_number?(cat)
+      str = "WHERE prod.category_id = #{cat.to_i}"
+    end
 
      # Generate top columns
      top_sql =
@@ -91,8 +97,8 @@ class AnalyticsController < ApplicationController
          ORDER BY totalQuantity
        ) AS pur
        ON prod.id = pur.product_id
+        #{str}
        ORDER BY total DESC
-       LIMIT 50
      ) AS topkek
      ORDER BY topkek.unique_name;
      "
@@ -109,6 +115,10 @@ class AnalyticsController < ApplicationController
      prods_ids = [*prods, *also_prods].uniq
      prods = prods_ids.join(", ")
 
+
+     if is_number?(cat)
+       str = "AND pi.category_id = #{cat.to_i}"
+     end
      # Get columns product ids associated with products that have changed.
      sql =
      "
@@ -284,6 +294,10 @@ end
 def cat_param
     params.require(:filter).permit("category_id")
 end
+
+  def is_number?(string)
+    true if Float(string) rescue false
+  end
 
   # List of state abbreviations
   def us_states
