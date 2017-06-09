@@ -46,7 +46,7 @@ function updatePage(){
   }
 
   sort_new_sum_a = sortMapByValue50(new_sum_a);
-  text = "New Top 50:"
+  text = ""
   for(var key in sort_new_sum_a) {
     if(key in col_sum_a){
       // Update the column with reds.

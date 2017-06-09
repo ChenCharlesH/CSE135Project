@@ -75,151 +75,73 @@ class AnalyticsController < ApplicationController
   def diff_query(also_prods)
     con = ActiveRecord::Base.connection
 
-    # Generate top columns
-    top_sql =
-    "
-    SELECT topkek.id AS product_id, topkek.unique_name, topkek.total
-    FROM
-    (
-      SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
-      FROM Products prod
-      LEFT OUTER JOIN
-      (
-        SELECT purch.product_id, SUM(purch.quantity) AS totalQuantity
-        FROM New_Purchases purch
-        GROUP BY purch.product_id
-        ORDER BY totalQuantity
-      ) AS pur
-      ON prod.id = pur.product_id
-      ORDER BY total DESC
-    ) AS topkek
-    ORDER BY topkek.unique_name;
-    "
+     # Generate top columns
+     top_sql =
+     "
+     SELECT topkek.id AS product_id, topkek.unique_name, topkek.total
+     FROM
+     (
+       SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
+       FROM Products prod
+       LEFT OUTER JOIN
+       (
+         SELECT purch.product_id, SUM(purch.quantity) AS totalQuantity
+         FROM New_Purchases purch
+         GROUP BY purch.product_id
+         ORDER BY totalQuantity
+       ) AS pur
+       ON prod.id = pur.product_id
+       ORDER BY total DESC
+       LIMIT 50
+     ) AS topkek
+     ORDER BY topkek.unique_name;
+     "
 
-    diff_column_sum = con.execute(top_sql)
+     diff_column_sum = con.execute(top_sql)
+     pp diff_column_sum
+     # No changes whatsoever.
+     if diff_column_sum[0]["total"] == 0
+       diff_column_sum = []
+     end
+     prods = diff_column_sum.map { |e|  e["product_id"]}
 
-    # No changes whatsoever.
-    prods = diff_column_sum.map { |e|  e["product_id"]}
+     # Get all relevant products
+     prods_ids = [*prods, *also_prods].uniq
+     prods = prods_ids.join(", ")
 
-    # Get all relevant products
-    prods_not_in_top = prods - also_prods
-    prev_top_prods = also_prods
-    prods_ids = [*prods, *also_prods].uniq
-    prods = prods_ids.join(", ")
-    prods_not_in_top = prods_not_in_top.join(", ")
-    prev_top_prods = prev_top_prods.join(", ")
-    prods_not_in_top_sum = []
+     # Get columns product ids associated with products that have changed.
+     sql =
+     "
+     SELECT up.product_unique_name, up.product_id, up.state, COALESCE(SUM(up.price * coal.quantity), 0) as total
+     FROM
+     (
+       SELECT u.state as state, p.unique_name as product_unique_name,
+              u.id AS user_id, p.id AS product_id, p.price as price
+       FROM
+         (
+           SELECT ui.state, ui.id
+           FROM Users ui
+         ) AS u,
+         (
+           SELECT pi.unique_name, pi.id, pi.price
+           FROM Products pi
+           WHERE pi.id IN (#{prods})
+         ) AS p
+     ) AS up
+     LEFT OUTER JOIN
+     (
+       SELECT p.user_id, p.product_id, SUM(p.quantity) AS quantity
+       FROM New_Purchases p
+       WHERE p.product_id IN (#{prods})
+       GROUP BY p.user_id, p.product_id
+     ) AS coal
+     ON
+     up.user_id = coal.user_id AND
+     up.product_id = coal.product_id
+     GROUP BY up.state, up.product_id, up.product_unique_name
+     ORDER BY up.state, up.product_id;"
 
-    prev_top =
-    "
-    SELECT topkek.id AS product_id, topkek.unique_name, topkek.total
-    FROM
-    (
-      SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
-      FROM Products prod
-      LEFT OUTER JOIN
-      (
-        SELECT purch.product_id, SUM(purch.quantity) AS totalQuantity
-        FROM New_Purchases purch
-        WHERE purch.product_id IN (#{prev_top_prods})
-        GROUP BY purch.product_id
-        ORDER BY totalQuantity
-      ) AS pur
-      ON prod.id = pur.product_id
-      ORDER BY total DESC
-    ) AS topkek
-    ORDER BY topkek.unique_name;
-    "
-    prev_top_sum = con.execute(prev_top)
-
-
-    if prods_not_in_top.length != 0
-      # Get the sum from purchases here.
-      sql =
-      "
-      SELECT kek.unique_name, kek.product_id, SUM(kek.total) AS total
-      FROM
-      (
-        (
-          SELECT topkek_1.id AS product_id, topkek_1.unique_name,  topkek_1.total
-          FROM
-          (
-          SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
-          FROM Products prod
-          LEFT OUTER JOIN
-          (
-            SELECT purch.product AS product_id, SUM(purch.quantity) AS totalQuantity
-            FROM Purchases purch
-            WHERE purch.product IN (#{prods_not_in_top})
-            GROUP BY purch.product
-            ORDER BY totalQuantity
-          ) AS pur
-          ON prod.id = pur.product_id
-          ORDER BY total DESC
-          ) AS topkek_1
-        )
-        UNION ALL
-        (
-        SELECT topkek.id AS product_id, topkek.unique_name, topkek.total
-        FROM
-        (
-          SELECT prod.id, prod.unique_name, COALESCE(prod.price * pur.totalQuantity, 0) AS total
-          FROM Products prod
-          LEFT OUTER JOIN
-          (
-          SELECT purch_n.product_id, SUM(purch_n.quantity) AS totalQuantity
-          FROM New_Purchases purch_n
-          WHERE purch_n.product_id IN (#{prods_not_in_top})
-          GROUP BY purch_n.product_id
-          ORDER BY totalQuantity
-          ) AS pur
-          ON prod.id = pur.product_id
-          ORDER BY total DESC
-        ) AS topkek
-        ORDER BY topkek.unique_name
-        )
-      ) AS kek
-      GROUP BY kek.unique_name, kek.product_id;
-      "
-
-    prods_not_in_to_sum = con.execute(sql)
-    end
-
-
-
-    # Get columns product ids associated with products that have changed.
-    sql =
-    "
-    SELECT up.product_unique_name, up.product_id, up.state, COALESCE(SUM(up.price * coal.quantity), 0) as total
-    FROM
-    (
-      SELECT u.state as state, p.unique_name as product_unique_name,
-             u.id AS user_id, p.id AS product_id, p.price as price
-      FROM
-        (
-          SELECT ui.state, ui.id
-          FROM Users ui
-        ) AS u,
-        (
-          SELECT pi.unique_name, pi.id, pi.price
-          FROM Products pi
-          WHERE pi.id IN (#{prods})
-        ) AS p
-    ) AS up
-    LEFT OUTER JOIN
-    (
-      SELECT p.user_id, p.product_id, SUM(p.quantity) AS quantity
-      FROM New_Purchases p
-      WHERE p.product_id IN (#{prods})
-      GROUP BY p.user_id, p.product_id
-    ) AS coal
-    ON
-    up.user_id = coal.user_id AND
-    up.product_id = coal.product_id
-    GROUP BY up.state, up.product_id, up.product_unique_name
-    ORDER BY up.state, up.product_id;"
-
-    return [*prev_top_sum, *prods_not_in_top_sum], con.execute(sql), prods_ids
+     return diff_column_sum, con.execute(sql), prods_ids
   end
 
   def sort_sum_row_value(values, matrix)
