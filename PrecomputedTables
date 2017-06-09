@@ -1,0 +1,17 @@
+===========Precomputed Tables============
+
+Our precomputed table is called New_Purchases.
+
+CREATE TABLE NEW_PURCHASES(
+    ID              SERIAL PRIMARY KEY,
+    USER_ID         INTEGER REFERENCES "USER"(ID) NOT NULL,
+    PRODUCT_ID      INTEGER NOT NULL,
+    QUANTITY        INTEGER NOT NULL DEFAULT 1,
+    TIME            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX product_id
+ON NEW_PURCHASES (product_id);
+
+CREATE INDEX user_id
+ON NEW_PURCHASES (user_id);

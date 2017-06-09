@@ -29,7 +29,7 @@ class Buynorder1Controller < ApplicationController
     end #end users for each
 
     # If all went well, redirect and report
-    redirect_to "/buynorder", flash: {notice:"Generated 10 orders!"}
+    redirect_to "/buynorder1", flash: {notice:"Generated 10 orders!"}
 
   end #end generate
 end

@@ -7,6 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create(unique_name: "SKK", password: "topkek", owner: true, age:50, state: "CA", created_at: Time.now, updated_at:Time.now)
+User.create(unique_name: "Kendrick", password: "topkek", owner: true, age:50, state: "CA", created_at: Time.now, updated_at:Time.now)
 
 maxUsersPerGroup = 100
 
@@ -38,7 +39,7 @@ numCat.times do |i|
   Category.create(unique_name: name, user_id: offset, desc: desc, created_at: create, updated_at: update)
 end
 
-numProd = 100
+numProd = 150
 
 numProd.times do |i|
   num = rand(10)
@@ -58,13 +59,12 @@ numProd.times do |i|
 end
 
 # Insert Purchases
-=begin
-numPurchases = 1000
+numPurchases = 10000
 # Random purchases
 numPurchases.times do |i|
   user_id = rand(maxUsersPerGroup * 2) + 1
   product_id = rand(numProd) + 1
-  quantity = rand(1000) + 1
+  quantity = rand(10) + 1
   Purchase.create(user: user_id, product: product_id, quantity: quantity)
 end
 
@@ -94,4 +94,3 @@ numCorr.times do |i|
     Purchase.create(user: user_id, product: corr_prod + 1, quantity: quantity)
   end
 end
-=end
