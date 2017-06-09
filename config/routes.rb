@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :products, only: [:index, :create, :update, :destroy]
     resources :orders, only: [:index, :create]
     resources :buynorder, only: [:index, :generate]
+    resources :buynorder1, only: [:index, :generate]
 
     resources :similar, only: [:index]
 
@@ -30,5 +31,6 @@ Rails.application.routes.draw do
 
     post "orders/confirm" => "orders#confirm"
     post "buynorder/generate"
+    post "buynorder1/generate"
   end
 end
