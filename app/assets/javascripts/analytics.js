@@ -25,13 +25,14 @@ function updatePage(){
   // |diff_column_sum| <= |col_sum_a|
   // Copy the col_sum_a
   new_sum_a = {}
-  alert(JSON.stringify(diff));
   for(var key in col_sum_a){
     if(col_sum_a[key][0] == null)
       new_sum_a[key] = 0;
     else
       new_sum_a[key] = col_sum_a[key][0];
   }
+  alert(JSON.stringify(new_sum_a));
+  alert(JSON.stringify(diff_column_sum));
 
   for(var key in diff_column_sum){
     val = 0
@@ -111,7 +112,6 @@ function sortMapByValue50(map)
     var tupleArray = [];
     for (var key in map) tupleArray.push([key, map[key]]);
     tupleArray.sort(function (a, b) { return a[1] - b[1] });
-    tupleArray = tupleArray.slice(0, 50);
     result = {};
     for (var i = 0; i < tupleArray.length; ++i) result[tupleArray[i][0]] = tupleArray[i][1];
     return result;
