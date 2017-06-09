@@ -31,8 +31,6 @@ function updatePage(){
     else
       new_sum_a[key] = col_sum_a[key][0];
   }
-  alert(JSON.stringify(new_sum_a));
-  alert(JSON.stringify(diff_column_sum));
 
   for(var key in diff_column_sum){
     val = 0
@@ -57,9 +55,18 @@ function updatePage(){
     else{
       //<div id = "refresh_result">
       // Update text
-      text += key + " <br />";
+      // get the name
+      name = ""
+      for(var i = 0; i < diff.length; ++i){
+        if(diff[i]["product_id"].toString() == key.toString()){
+          name = diff[i]["product_unique_name"]
+        }
+      }
+        text += name + " is now in top 50." + " <br />";
     }
   }
+  $("#text_result").html(text);
+
 
   // Set all purples
   for(var i = 0; i < 50; ++i){
@@ -111,7 +118,8 @@ function sortMapByValue50(map)
 {
     var tupleArray = [];
     for (var key in map) tupleArray.push([key, map[key]]);
-    tupleArray.sort(function (a, b) { return a[1] - b[1] });
+    tupleArray.sort(function (a, b) { return b[1] - a[1] });
+    tupleArray = tupleArray.slice(0, 50);
     result = {};
     for (var i = 0; i < tupleArray.length; ++i) result[tupleArray[i][0]] = tupleArray[i][1];
     return result;

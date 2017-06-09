@@ -103,7 +103,7 @@ class AnalyticsController < ApplicationController
 
     # Get all relevant products
     prods_not_in_top = prods - also_prods
-    prev_top_prods = prods
+    prev_top_prods = also_prods
     prods_ids = [*prods, *also_prods].uniq
     prods = prods_ids.join(", ")
     prods_not_in_top = prods_not_in_top.join(", ")
