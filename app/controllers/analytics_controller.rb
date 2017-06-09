@@ -28,11 +28,24 @@ class AnalyticsController < ApplicationController
 
     # Generate index for US states.
     us_state_vals = us_states
+    @us_table_js = Hash[us_state_vals.each_with_index.map{|v, i| [v[0], i]}]
     @us_table = us_state_vals.each_with_index.map{|v, i| {unique_name: v, id: i}}
 
     # Generate Row indexing
+    # Creates array with following: [col_sum, matrix_index, product_id]
+    # Recall matrix index is sorted by alphabetical so we are trying to rearrange.
     @col_sum_a = sort_sum_col_value(col_names, matrix)
+
+
     @row_sum_a = sort_sum_row_value(@us_table, matrix)
+
+    # Js version only needs to keep track of index to sum, matrix pos is in array pos.
+    # Contains {col_id => sum}
+    @row_sum_a_js = Hash[@row_sum_a.each_with_index.map{|h, ind| [h[1], [h[0].to_i, ind]]}]
+    @col_sum_a_js = Hash[@col_sum_a.each_with_index.map{|h, ind| [h[2], [h[0].to_i, ind]]}]
+
+    # Generate a list of columns.
+    @list_cols = @col_sum_a.map{|h| h[2].to_i}
 
     @values = {col_names: col_names, row_names: us_states, query_results: query_results, matrix: matrix}
   end
@@ -40,28 +53,74 @@ class AnalyticsController < ApplicationController
   # AJAX for refreshing
   def refresh()
     # Contains new matrix values that have been changed.
-    @diff_values = diff_query.to_a
+    list_cols = JSON.parse(params["list_cols"])
+    diff = diff_query list_cols
+    @diff_values = diff[1]
+
+    # Order only reflects decreasing order, not matrix order.
+    @diff_column_sum = diff[0]
+
+    # Create a simple lookup table
+    if diff.length == 0
+      # No change, just set to list_cols
+      @diff_cols = list_cols
+    else
+      @diff_cols = @diff_column_sum.map{|h| h["product_id"]}
+    end
+    @diff_column_sum = Hash[@diff_column_sum.map{|h| [h["product_id"], h["total"].to_i]}]
 
     render :layout=>false
   end
 
-  def diff_query()
-    # Get list of values that have changed.
-    new_purch = NewPurchase.all
+  def diff_query(also_prods)
+    con = ActiveRecord::Base.connection
 
-    if new_purch.length != 0
-      prod_col = new_purch.map{|e| e.product_id}.uniq
-      prods = prod_col.join(", ")
-    else
+    # Generate top columns
+    top_sql =
+    "
+    SELECT up.product_id, COALESCE(SUM(up.price * coal.quantity),0) as total
+    FROM
+    (
+      SELECT u.state as state,
+             u.id AS user_id, p.id AS product_id, p.price as price
+      FROM
+        (
+          SELECT ui.state, ui.id
+          FROM Users ui
+        ) AS u,
+        (
+          SELECT pi.id, pi.price
+          FROM Products pi
+        ) AS p
+    ) AS up
+    LEFT OUTER JOIN
+    (
+      SELECT p.user_id, p.product_id, SUM(p.quantity) AS quantity
+      FROM New_Purchases p
+      GROUP BY p.user_id, p.product_id
+    ) AS coal
+    ON
+    up.user_id = coal.user_id AND
+    up.product_id = coal.product_id
+    GROUP BY up.product_id
+    ORDER BY total DESC
+    LIMIT 50;
+    "
+
+    diff_column_sum = con.execute(top_sql)
+    prods = diff_column_sum.map { |e|  e["product_id"]}
+    if prods.length == 0
       return []
     end
 
-    con = ActiveRecord::Base.connection
+    # Get all relevant products
+    prods_ids = [*prods, *also_prods].uniq
+    prods = prods_ids.join(", ")
+
     # Get columns product ids associated with products that have changed.
-    # TODO: Figure out a way to accomondate for size of new purchase query.
     sql =
     "
-    SELECT up.product_unique_name, up.product_id, SUM(up.price * coal.quantity) as total
+    SELECT up.product_unique_name, up.product_id, up.state, SUM(up.price * coal.quantity) as total
     FROM
     (
       SELECT u.state as state, p.unique_name as product_unique_name,
@@ -87,10 +146,10 @@ class AnalyticsController < ApplicationController
     ON
     up.user_id = coal.user_id AND
     up.product_id = coal.product_id
-    GROUP BY up.product_id, up.product_unique_name
+    GROUP BY up.state, up.product_id, up.product_unique_name
     ORDER BY up.product_id;"
 
-    return con.execute(sql)
+    return diff_column_sum, con.execute(sql), prods_ids
   end
 
   def sort_sum_row_value(values, matrix)
@@ -244,7 +303,6 @@ end
       ['CA'],
       ['CO'],
       ['CT'],
-      ['DC'],
       ['DE'],
       ['FL'],
       ['GA'],

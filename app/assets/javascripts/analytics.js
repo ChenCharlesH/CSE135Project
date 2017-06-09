@@ -1,16 +1,125 @@
 function bind(form) {
     var url = "/analytics/refresh"; // search action
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: url,
-      data: "",
+      data: {list_cols: JSON.stringify(list_cols)},
       success: function(html) { // AJAX
         $("#refresh_result").html(html); // Replace the "results" div with the result
-        // TODO: Add parsing logic here and update the page!
-        alert(diff);
-        ready()
+        processData();
+        updatePage();
+        ready();
     }
   });
+};
+
+// Function to update page.
+function updatePage(){
+  // Clear all red and purple
+  $(".red").removeClass("red");
+  $(".purple").removeClass("purple");
+
+  // Compare the column sums in ordered size.
+  // Calculate new sum values.
+  // Contains actual new sums.
+  // |diff_column_sum| >= |col_sum_a|
+  var new_sum_a = {};
+  for(var key in diff_column_sum){
+    val = 0
+    if (diff_column_sum[key] != null){
+      val = diff_column_sum[key];
+    }
+    if(key in col_sum_a)
+      new_sum_a[key] = val + col_sum_a[key][0];
+    else {
+      new_sum_a[key] = val;
+    }
+  }
+
+  alert(JSON.stringify(diff));
+
+  sort_new_sum_a = sortMapByValue50(new_sum_a);
+  text = "New Top 50:"
+  for(var key in sort_new_sum_a) {
+    if(key in col_sum_a){
+      // Update the column with reds.
+      updateColumn(key);
+    }
+    else{
+      //<div id = "refresh_result">
+      // Update text
+      text += key + " <br />";
+    }
+  }
+
+  // Set all purples
+  for(var i = 0; i < 50; ++i){
+    $('.col' + i.toString()).addClass("purple")
+  }
+
+  for(var key in col_sum_a){
+    if(key in sort_new_sum_a)
+      $('.col' + col_sum_a[key][1].toString()).removeClass("purple");
+  }
+};
+
+function updateColumn(key){
+  // Grab the column number
+  col_num = col_sum_a[key][1]
+  for(var i = 0; i < diff.length; ++i){
+    // Get row number
+    if(diff[i]["product_id"] == parseInt(key)){
+      // Grab the state id.
+      state = us_table[diff[i]["state"]];
+      // Grab row id.
+      row_num = row_sum_a[state.toString()][1];
+
+      // Update the id to the correct value.
+      id_val = "#" + row_num + col_num;
+      elem =  $(id_val);
+
+      // Get diff value.
+      value = 0;
+      if(diff[i]["total"] != null)
+        value = diff[i]["total"];
+
+      html_value = parseInt(elem.html());
+      // Check if no change
+      if(html_value == value)
+        break;
+
+      // Update the element!
+      elem.html(html_value + value);
+      elem.addClass("red");
+    }
+  }
+
+}
+
+// Sort function from stack overflow
+// @Ben Blank question: 5199901
+function sortMapByValue50(map)
+{
+    var tupleArray = [];
+    for (var key in map) tupleArray.push([key, map[key]]);
+    tupleArray.sort(function (a, b) { return a[1] - b[1] });
+    tupleArray = tupleArray.slice(0, 50);
+    result = {};
+    for (var i = 0; i < tupleArray.length; ++i) result[tupleArray[i][0]] = tupleArray[i][1];
+    return result;
+};
+
+
+// Function to actually process and display data.
+function processData(){
+  if(typeof diff !== 'undefined')
+    diff = jQuery.parseJSON(diff);
+
+  if(typeof diff_column_sum !== 'undefined')
+    diff_column_sum = jQuery.parseJSON(diff_column_sum);
+
+  if(typeof diff_cols !== 'undefined')
+    diff_cols = jQuery.parseJSON(diff_cols);
 };
 
 // TODO: Add arrays to keep track of red, top 50, and purple for state changes.
@@ -23,7 +132,8 @@ var ready = function(){
   // alert(jQuery.parseJSON(us_table)[3].id);
 
   // Convert data to readable data.
-  /*
+
+
   if(typeof us_table !== 'undefined')
     us_table = jQuery.parseJSON(us_table);
 
@@ -32,7 +142,9 @@ var ready = function(){
 
   if(typeof row_sum_a !== 'undefined')
     row_sum_a = jQuery.parseJSON(row_sum_a);
-    */
+
+  if(typeof list_cols !== 'undefined')
+    list_cols = jQuery.parseJSON(list_cols);
 
   // Side bar menu
   $('.refresh').click(function(){

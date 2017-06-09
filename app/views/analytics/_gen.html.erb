@@ -46,8 +46,7 @@
 
         <% @col_sum_a.each_with_index do |cs, rcs| %>
           <% indcs = cs[1] %>
-          <td id = '<%= rsc.to_s + "," + rcs.to_s %>' class = '<%= "col" + rcs.to_s %>'>
-            <!-- c.to_a[2][1] is the total sales of that item by state -->
+          <td id = '<%= rsc.to_s +  rcs.to_s %>' class = '<%= "col" + rcs.to_s %>'>
             <%= @matrix[indrs][indcs]["total"].to_i %>
           </td>
         <% end %>

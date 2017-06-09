@@ -1,3 +1,5 @@
 <%= javascript_tag do %>
   diff = '<%= raw j @diff_values.to_json %>';
+  diff_column_sum = '<%= raw j @diff_column_sum.to_json %>';
+  diff_cols = '<%= raw j @diff_cols.to_json %>';
 <% end %>

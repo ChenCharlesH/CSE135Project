@@ -58,7 +58,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
       ['CA', 'CA'],
       ['CO', 'CO'],
       ['CT', 'CT'],
-      ['DC', 'DC'],
       ['DE', 'DE'],
       ['FL', 'FL'],
       ['GA', 'GA'],
