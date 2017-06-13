@@ -1,0 +1,6 @@
+CREATE TABLE suggested(
+  user    INTEGER REFERENCES USER(id) NOT NULL,
+  video   INTEGER REFERENCES VIDEO(id) NOT NULL,
+  title   TEXT NOT NULL,
+  likes   INTEGER DEFAULT 0
+)

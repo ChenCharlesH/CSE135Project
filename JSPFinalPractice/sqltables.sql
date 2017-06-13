@@ -1,0 +1,28 @@
+CREATE TABLE user(
+  id        SERIAL PRIMARY KEY,
+  name      TEXT UNIQUE NOT NULL,
+  password  TEXT NOT NULL
+);
+
+CREATE TABLE video(
+  id        SERIAL PRIMARY KEY,
+  title     TEXT NOT NULL,
+  filename  TEXT NOT NULL
+);
+
+CREATE TABLE following(
+  follower  INTEGER REFERENCES USER(id) NOT NULL,
+  followee  INTEGER REFERENCES USER(id) NOT NULL
+);
+
+CREATE TABLE likes(
+  user  INTEGER REFERENCES USER(id) NOT NULL,
+  video INTEGER REFERENCES VIDEO(id) NOT NULL
+);
+
+CREATE TABLE suggested(
+  user    INTEGER REFERENCES USER(id) NOT NULL,
+  video   INTEGER REFERENCES VIDEO(id) NOT NULL,
+  title   TEXT NOT NULL,
+  likes   INTEGER DEFAULT 0
+)
